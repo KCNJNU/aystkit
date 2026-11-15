@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1320">
+  <title>等待审批 · 观测平台</title>
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/cloud.css">
+  <link rel="stylesheet" href="/access.css">
+</head>
+<body class="login-page access-page" data-access-page="pending">
+  <main class="access-main">
+    <section class="login-panel access-card pending-card" aria-labelledby="pending-title">
+      <div class="access-brand">工控机 <span>观测平台</span></div>
+      <div class="pending-icon" aria-hidden="true"><svg viewBox="0 0 32 32"><rect x="7" y="13" width="18" height="15" rx="4"/><path d="M11 13V9a5 5 0 0 1 10 0v4m-5 6v3"/></svg></div>
+      <h1 id="pending-title">当前未获取权限</h1>
+      <p class="access-subtitle">等待管理员批准</p>
+      <p id="access-username" class="pending-username"></p>
+      <p id="access-message" class="access-message" role="status" aria-live="polite"></p>
+      <a class="access-button secondary" href="/password">修改密码</a>
+      <button id="access-logout" class="access-button secondary" type="button">退出登录</button>
+    </section>
+  </main>
+  <script src="/access.js"></script>
+</body>
+</html>

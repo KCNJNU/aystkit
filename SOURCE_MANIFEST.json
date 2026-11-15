@@ -1,0 +1,69 @@
+{
+  "package": "云平台源码交接_20261115",
+  "createdAt": "2026-11-15T15:05:07.070615+08:00",
+  "projects": {
+    "observer-platform": {
+      "files": 1050,
+      "bytes": 29707450
+    },
+    "warehouse-platform": {
+      "files": 393,
+      "bytes": 2692223
+    },
+    "deployed-snapshot": {
+      "files": 723,
+      "bytes": 3644176
+    }
+  },
+  "sources": {
+    "observerRuntime": "当前云端运行容器的cloud/与shared/，逐文件见deployed-snapshot/RUNTIME_MANIFEST.json",
+    "coverageEditableSource": "云端/opt/robot-cloud/coverage-config的src和构建配置",
+    "observerSupportingFiles": "本地robot-cloud维护工作区的collector/deploy/tests/docs与依赖模板",
+    "warehouseEditableSource": "本地DBProg/RobotHygienism当前维护工作树；未包含.git及生成目录",
+    "warehouseRuntime": "当前云端API/worker运行镜像的编译文件、Prisma或必要脚本"
+  },
+  "services": {
+    "observer": {
+      "container": "robot-observer-cloud-backend-1",
+      "image": "robot-observer-cloud:4be5389f8f96e1a18a41ad3263a378d07cc2c8c8",
+      "imageId": "sha256:9b0b9de8e95877b1c67dcfdd7ddde60a58ccd519bbeb0b600ceb52d9aa087c07",
+      "health": "healthy"
+    },
+    "warehouse-api": {
+      "container": "robot-warehouse-cloud-backend-1",
+      "image": "robot-warehouse-api:processed-no-size-limit-20261112-86dabc3a5dcb4532",
+      "imageId": "sha256:32499b4ced193e30f3364c6d419d08d07c663bd6e1b78f2a153d42a41534eb2e",
+      "health": "healthy"
+    },
+    "warehouse-worker": {
+      "container": "robot-warehouse-cloud-worker-1",
+      "image": "robot-warehouse-worker:processed-no-size-limit-20261112-86dabc3a5dcb4532",
+      "imageId": "sha256:377a593224f565333d87a676860a30b87240b06067e463d5c3a61fc8d4e221c8",
+      "health": "healthy"
+    }
+  },
+  "observerSanitizedTemplates": {
+    ".env.collector.example": [
+      "DEVICE_TOKEN"
+    ],
+    ".env.example": [
+      "DEVICE_CREDENTIALS_JSON",
+      "VIEWER_USERNAME",
+      "VIEWER_PASSWORD_HASH",
+      "SESSION_SECRET"
+    ]
+  },
+  "warehouseTemplateSanitization": "warehouse-platform/.env.example的凭据字段替换为YOUR_占位；原源码不变",
+  "excluded": [
+    "真实.env",
+    "SSH/TLS密钥与证书",
+    "账号与数据库文件",
+    "采集视频与对象存储数据",
+    "数据备份",
+    "运行缓存",
+    "Git历史",
+    "node_modules与虚拟环境"
+  ],
+  "sourceAndRuntimeDifference": "见交接说明.txt及版本对照.json；不将本地旧dist冒充当前云端版本",
+  "sourceApplicationFilesModified": false
+}

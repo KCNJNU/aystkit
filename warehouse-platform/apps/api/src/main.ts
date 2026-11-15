@@ -1,0 +1,40 @@
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+// cookie-parser uses a CommonJS `export =` declaration.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import cookieParser = require('cookie-parser');
+import { raw } from 'express';
+import { AppModule } from './app.module';
+import { StructuredLoggerService } from './observability/structured-logger.service';
+import { PreparedFolderPackagesService } from './datasets/prepared-folder-packages.service';
+
+async function bootstrap() {
+  process.env.RUNTIME_SERVICE_NAME = 'api';
+  Object.defineProperty(BigInt.prototype, 'toJSON', { value(this: bigint) { return this.toString(); }, configurable: true });
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  app.enableShutdownHooks();
+  if (process.env.DEPLOYMENT_ENVIRONMENT?.toUpperCase() === 'PRODUCTION') app.getHttpAdapter().getInstance().set('trust proxy', 2);
+  app.useLogger(app.get(StructuredLoggerService));
+  app.use(cookieParser());
+  app.use(raw({ type: 'application/octet-stream', limit: '8mb' }));
+  const corsOriginPatterns = (process.env.CORS_ORIGIN ?? 'http://localhost:5173').split(',').map((value) => value.trim()).filter(Boolean);
+  app.enableCors({
+    origin: (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) => callback(null, !origin || corsOriginPatterns.some((pattern) => pattern === origin || wildcardOrigin(pattern).test(origin))),
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Content-Range', 'X-Part-SHA256', 'X-CSRF-Token', 'X-Request-ID', 'X-Trace-ID', 'traceparent', 'Idempotency-Key', 'Last-Event-ID', 'Authorization'],
+    exposedHeaders: ['Content-Range', 'X-Request-ID', 'X-Trace-ID', 'traceparent'],
+  });
+  app.setGlobalPrefix('api', { exclude: ['health', 'ready', 'metrics', 'version'] });
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  const config = new DocumentBuilder()
+    .setTitle('Internal Warehouse AI Platform')
+    .setDescription('Authenticated warehouse, uploads, dataset versions and read-only AI queries.')
+    .setVersion('0.1.0')
+    .build();
+  SwaggerModule.setup('api/docs', app, SwaggerModule.createDocument(app, config));
+  await app.listen(Number(process.env.API_PORT ?? 3000));
+  app.get(PreparedFolderPackagesService).start();
+}
+function wildcardOrigin(pattern: string) { return new RegExp(`^${pattern.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replaceAll('*', '[^/]+')}$`); }
+void bootstrap();

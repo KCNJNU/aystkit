@@ -1,0 +1,1 @@
+function e(t){const n=t==null?void 0:t.datasetsReturnTo;return typeof n=="string"&&/^\/datasets(?:\?[^#\\]*)?$/.test(n)?n:"/datasets"}function s(t,n){const r=`/datasets/${encodeURIComponent(n)}`,o=t==null?void 0:t.directoryReturnTo;return typeof o=="string"&&(o===r||o.startsWith(r+"?"))&&!/[#\\]/.test(o)?o:r}export{e as a,s as d};

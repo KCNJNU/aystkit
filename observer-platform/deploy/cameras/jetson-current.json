@@ -1,0 +1,8 @@
+{
+  "cameras": [
+    {"id": "camera1", "label": "前", "direction": "front", "enabled": true, "device": "/dev/v4l/by-path/platform-3610000.usb-usb-0:2.2.4.2:1.0-video-index0"},
+    {"id": "camera2", "label": "后", "direction": "rear", "enabled": true, "device": "/dev/v4l/by-path/platform-3610000.usb-usb-0:2.4:1.0-video-index0"},
+    {"id": "camera3", "label": "右", "direction": "right", "enabled": true, "device": "/dev/v4l/by-path/platform-3610000.usb-usb-0:2.2.1:1.0-video-index0"},
+    {"id": "camera4", "label": "左", "direction": "left", "enabled": true, "device": "/dev/v4l/by-path/platform-3610000.usb-usb-0:2.2.4.1:1.0-video-index0"}
+  ]
+}

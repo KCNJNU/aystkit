@@ -1,0 +1,26 @@
+import type { Prisma, RobotFile } from '@prisma/client';
+export declare const ARCHIVE_ASSEMBLY_TYPE = "garage-continuous-video";
+export declare const ARCHIVE_ASSEMBLY_ROLE = "continuous-export";
+export type ArchiveSource = Pick<RobotFile, 'id' | 'datasetId' | 'robotId' | 'folderPath' | 'objectKey' | 'originalName' | 'fileSize' | 'checksum' | 'capturedAt' | 'metadata' | 'recognitionType' | 'mimeType' | 'fileType' | 'schemaVersion' | 'createdAt' | 'updatedAt'>;
+export type RecordingGroup = {
+    id: string;
+    datasetId: string;
+    path: string;
+    sensor: string;
+    robotId: string;
+    startedAt: string;
+    endAt: string;
+    partCount: number;
+    sourceBytes: string;
+    frameCount: number;
+    durationSeconds: number;
+    closed: boolean;
+    gapBeforeSeconds: number | null;
+    sources: ArchiveSource[];
+    error: string | null;
+};
+export declare function jsonRecord(value: unknown): Record<string, unknown>;
+export declare function sourceFingerprint(source: ArchiveSource): unknown;
+export declare function isOriginalArchiveVideo(source: Pick<ArchiveSource, 'originalName' | 'recognitionType' | 'metadata'>): boolean;
+export declare function groupArchiveRecordings(datasetId: string, path: string, input: readonly ArchiveSource[]): RecordingGroup[];
+export declare function inputMetadata(value: unknown): Prisma.InputJsonValue;

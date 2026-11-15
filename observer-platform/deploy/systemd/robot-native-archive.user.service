@@ -1,0 +1,27 @@
+[Unit]
+Description=Garage-only native sensor archive (subscriptions only)
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/robot-cloud/archive.env
+ExecStart=/bin/bash %h/.local/share/robot-cloud/deploy/scripts/run_archive.sh
+Restart=always
+RestartSec=10
+TimeoutStopSec=240
+KillMode=mixed
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+Nice=10
+CPUWeight=10
+IOWeight=10
+# Continuous recording needs bounded progress while previews write to disk.
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+MemoryMax=768M
+TasksMax=64
+
+[Install]
+WantedBy=default.target

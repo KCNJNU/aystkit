@@ -1,0 +1,15 @@
+[Unit]
+Description=YOLO detections from existing camera preview caches
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /home/nvidia/.local/share/robot-cloud/run_yolo_observer.sh
+UMask=0077
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+KillMode=control-group
+
+[Install]
+WantedBy=default.target

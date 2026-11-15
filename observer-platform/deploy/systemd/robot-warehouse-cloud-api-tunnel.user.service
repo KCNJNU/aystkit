@@ -1,0 +1,22 @@
+[Unit]
+Description=Restricted cloud warehouse API transport for robot uploads
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/robot-cloud/warehouse-upload-tunnel.env
+ExecStart=/bin/bash %h/.local/share/robot-cloud/deploy/scripts/warehouse_cloud_api_tunnel.sh
+Restart=always
+RestartSec=5
+TimeoutStopSec=10
+NoNewPrivileges=yes
+UMask=0077
+Nice=15
+IOSchedulingClass=idle
+MemoryMax=64M
+TasksMax=8
+
+[Install]
+WantedBy=default.target

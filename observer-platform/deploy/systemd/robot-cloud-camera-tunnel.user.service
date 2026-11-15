@@ -1,0 +1,15 @@
+[Unit]
+Description=Read-only loopback tunnel for existing Jetson camera previews
+After=network.target
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/robot-cloud/camera-tunnel.env
+ExecStart=/usr/bin/ssh -F /dev/null -NT -o BatchMode=yes -o PasswordAuthentication=no -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o HostKeyAlgorithms=ssh-ed25519 -o HostKeyAlias=10.48.106.96 -o UserKnownHostsFile=%h/.ssh/known_hosts -o ForwardAgent=no -o ForwardX11=no -o ExitOnForwardFailure=yes -o ConnectTimeout=8 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -i %h/.ssh/id_ed25519 -L 127.0.0.1:18080:127.0.0.1:18081 nvidia@${JETSON_CAMERA_HOST}
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+UMask=0077
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-11-15T15:05:07.070454+08:00",
+  "requiredProjects": [
+    "observer-platform",
+    "warehouse-platform",
+    "deployed-snapshot"
+  ],
+  "privatePathsExcluded": true,
+  "symlinksExcluded": true,
+  "runtimeSnapshotHashesMatched": true,
+  "sourcePrismaMigrations": 14,
+  "sensitiveContentReview": {
+    "actualPrivateKeysOrCloudKeysOrJwtFound": 0,
+    "reviewedTemplateAndFixtureMatches": 7,
+    "classification": "占位连接串、Compose变量、CI临时库与测试夹具；不是生产凭据",
+    "independentReview": "PASS"
+  },
+  "archiveValidation": "逐文件CRC与SHA256校验；最终结果另见ZIP旁的校验文件",
+  "applicationBuildOrDeploymentPerformed": false,
+  "businessDatabasesAndObjectStorageIncluded": false
+}

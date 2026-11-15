@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a111b">
+  <title>DBProg 数仓 · 观测平台</title>
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/dbprog.css">
+  <script src="/dbprog.js" defer></script>
+</head>
+<body class="dbprog-page">
+  <header class="dbprog-header"><a class="dbprog-brand" href="/">工控机 <span>观测平台</span></a><a class="dbprog-back" href="/">← 返回观测页</a></header>
+  <main class="dbprog-main">
+  <section class="dbprog-root">
+    <div class="section-intro dbprog-intro"><div><h1>DBProg 数仓</h1><p class="note">浏览数据集、目录和文件，使用现有 DBProg 账号及其访问权限。</p></div><div class="dbprog-actions"><button type="button" id="dbprogRefresh">刷新</button><button type="button" id="dbprogLogout" hidden>退出数仓</button></div></div>
+    <div class="dbprog-status"><div id="dbprogConnectionPanel" class="dbprog-status-panel" data-health="WAITING_UPSTREAM"><span>服务连接</span><div class="dbprog-status-line"><i id="dbprogConnectionDot" class="status-dot WAITING_UPSTREAM"></i><strong id="dbprogConnectionText">尚未连接</strong></div><p id="dbprogHealthText">正在读取 DBProg 服务状态。</p><div id="dbprogServices" class="dbprog-services"></div></div><div class="dbprog-status-panel"><span>当前账号</span><div class="dbprog-status-line"><strong id="dbprogAccountText">尚未登录</strong></div><p id="dbprogAccountNote">请使用 DBProg 原有账号登录。</p></div></div>
+    <form id="dbprogLoginForm" class="dbprog-login" hidden><h3>登录 DBProg</h3><p>登录后可在观测页浏览当前账号有权访问的数仓数据。</p><div class="dbprog-login-fields"><label class="dbprog-field">账号（邮箱或 admin）<input id="dbprogEmail" name="email" type="text" inputmode="email" autocomplete="username" maxlength="254" required></label><label class="dbprog-field">密码<input id="dbprogPassword" name="password" type="password" autocomplete="current-password" maxlength="1024" required></label><button type="submit" id="dbprogLogin">登录</button></div></form>
+    <div id="dbprogMessage" class="dbprog-message" role="status" aria-live="polite">尚未读取数仓。</div>
+    <div id="dbprogSummary" class="dbprog-summary" hidden></div>
+    <div id="dbprogBrowser" class="dbprog-browser" hidden>
+      <div class="dbprog-path"><button type="button" id="dbprogDatasetsHome">数据集</button><span id="dbprogBreadcrumb">全部数据集</span></div>
+      <div class="dbprog-toolbar"><form id="dbprogSearchForm" class="dbprog-search"><label class="dbprog-field"><span id="dbprogSearchLabel">搜索数据集</span><input id="dbprogKeyword" type="search" maxlength="200" placeholder="输入名称关键词" autocomplete="off"></label><button type="submit" id="dbprogSearch">搜索</button></form><label id="dbprogFolderField" class="dbprog-field dbprog-folder-field" hidden>目录<select id="dbprogFolder"><option value="">全部目录</option></select></label></div>
+      <div class="dbprog-table-wrap"><table class="dbprog-table"><thead id="dbprogTableHead"><tr><th>数据集</th><th>状态</th><th>更新时间</th><th>操作</th></tr></thead><tbody id="dbprogTableBody"><tr><td colspan="4" class="empty-block">等待查询</td></tr></tbody></table></div>
+      <div class="dbprog-pagination"><span id="dbprogPageInfo">—</span><button type="button" id="dbprogPrev" disabled>上一页</button><button type="button" id="dbprogNext" disabled>下一页</button></div>
+    </div>
+    <div id="dbprogFileDetail" class="dbprog-detail" hidden><div class="section-intro"><h3>文件详情</h3><button type="button" id="dbprogCloseDetail">收起</button></div><dl id="dbprogFileFields"></dl></div>
+  </section>
+  </main>
+</body>
+</html>

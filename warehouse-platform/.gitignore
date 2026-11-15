@@ -1,0 +1,12 @@
+node_modules/
+.npm-cache/
+dist/
+.env
+*.log
+coverage/
+.local/
+.runtime/
+data/dataset-workspace/
+apps/api/data/dataset-workspace/
+.venv-dvc/
+.DS_Store

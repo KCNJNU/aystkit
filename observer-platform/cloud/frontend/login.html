@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1320">
+  <title>登录 · 机器人云端观测平台</title>
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/cloud.css">
+</head>
+<body class="login-page">
+  <main class="login-main">
+    <div class="login-shell">
+    <section class="login-intro" aria-label="机器人云端观测平台介绍">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><b>工控</b></span><div class="brand-copy"><strong>工控机观测平台 · 云端</strong></div></div>
+      <figure class="login-illustration" aria-label="设备数据通过云端汇聚，供网页登录后只读观测的流程示意">
+        <svg viewBox="0 0 480 224" role="img" aria-labelledby="login-diagram-title">
+          <title id="login-diagram-title">设备数据 · 云端汇聚 · 只读观测</title>
+          <defs>
+            <linearGradient id="login-plane" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#22415a"/><stop offset="1" stop-color="#102437"/></linearGradient>
+            <linearGradient id="login-core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3b687d"/><stop offset="1" stop-color="#193849"/></linearGradient>
+          </defs>
+          <path d="M21 118 240 37l219 81-219 80z" fill="#102133" stroke="#244256"/>
+          <path d="m21 129 219 80 219-80M21 140l219 80 219-80" fill="none" stroke="#203649" opacity=".55"/>
+          <path d="M92 118h286" fill="none" stroke="#365a71" stroke-width="1.5" stroke-dasharray="5 6"/>
+          <path d="m162 114 5 4-5 4m151-8 5 4-5 4" fill="none" stroke="#8ac8dc" stroke-width="1.5"/>
+          <rect x="49" y="80" width="86" height="74" rx="15" fill="#091722" opacity=".65"/>
+          <rect x="49" y="67" width="86" height="74" rx="15" fill="url(#login-plane)" stroke="#477084"/>
+          <g fill="none" stroke="#9ccede" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="73" y="88" width="38" height="26" rx="8"/><path d="M84 88v-6h16v6M73 105h38M80 97h3m18 0h3M81 114v5m22-5v5"/>
+          </g>
+          <rect x="193" y="64" width="94" height="78" rx="16" fill="#091722" opacity=".65"/>
+          <rect x="193" y="48" width="94" height="78" rx="16" fill="url(#login-core)" stroke="#76b4c7"/>
+          <g fill="none" stroke="#b8e4ed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M224 96a8 8 0 0 1 0-16 15 15 0 0 1 29-3 10 10 0 0 1 0 19z"/><path d="M240 81v20m-5-5 5 5 5-5"/></g>
+          <rect x="345" y="80" width="86" height="74" rx="15" fill="#091722" opacity=".65"/>
+          <rect x="345" y="67" width="86" height="74" rx="15" fill="url(#login-plane)" stroke="#477084"/>
+          <g fill="none" stroke="#9ccede" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="370" y="88" width="36" height="25" rx="4"/><path d="M384 113v7m8-7v7m-14 0h20M376 104v-7m8 7V94m8 10v-4m8 4V93"/></g>
+        </svg>
+      </figure>
+    </section>
+    <section class="panel login-panel" aria-labelledby="login-title">
+      <div class="login-lock" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3m-4 5v2"/></svg></div>
+      <h1 id="login-title">登录观测平台</h1>
+      <form id="login-form" action="/api/login" method="post">
+        <label for="username">账号</label>
+        <input id="username" name="username" autocomplete="username" placeholder="请输入账号" required maxlength="64">
+        <label for="password">密码</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="请输入密码" required>
+        <button id="login-submit" type="submit"><span>登录观测平台</span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></button>
+        <p id="login-message" class="login-message" role="status" aria-live="polite"></p>
+      </form>
+      <p class="account-switch"><a href="/register">注册账号</a></p>
+      <p class="login-note"><svg viewBox="0 0 18 20" aria-hidden="true"><path d="m9 2 6 2v5c0 4-3 6-6 8-3-2-6-4-6-8V4z"/><path d="m6 9 2 2 4-4"/></svg><span>只读访问 · 无控制权限</span></p>
+    </section>
+    </div>
+  </main>
+  <script src="/login.js"></script>
+</body>
+</html>

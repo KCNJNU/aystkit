@@ -1,0 +1,13 @@
+[Unit]
+Description=Shared local four-camera preview and low-latency web video
+After=graphical-session.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/nvidia/code/upper_computer
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/run/user/1000/gdm/Xauthority
+ExecStart=/usr/bin/python3 -B /home/nvidia/code/upper_computer/install/yolo_camera/lib/yolo_camera/camera_native_web.py --config /home/nvidia/.config/robot-cloud/cameras.json --local-window --web-max-side 640 --web-fps 10 --web-bitrate 350000
+Restart=no
+KillMode=mixed
+TimeoutStopSec=90

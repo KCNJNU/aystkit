@@ -1,0 +1,63 @@
+name: robot-observer-cloud
+services:
+  backend:
+    image: robot-observer-cloud:${CLOUD_IMAGE_TAG:-local}
+    build:
+      context: ..
+      dockerfile: cloud/Dockerfile
+      args:
+        PYTHON_BASE_IMAGE: ${PYTHON_BASE_IMAGE:-python:3.12-slim-bookworm}
+    env_file: ../.env
+    environment:
+      DATA_DIR: /data
+      HOST: 0.0.0.0
+      PORT: 8888
+      ALLOW_INSECURE_LOCAL: "false"
+      NATIVE_VIDEO_SOCKET: ${NATIVE_VIDEO_SOCKET:-}
+      NATIVE_VIDEO_MAX_PLAYING: ${NATIVE_VIDEO_MAX_PLAYING:-4}
+      NATIVE_VIDEO_SPLIT_SOCKETS: ${NATIVE_VIDEO_SPLIT_SOCKETS:-false}
+    ports:
+      - "127.0.0.1:8888:8888"
+    volumes:
+      - ../data:/data
+      - ../.runtime/native-video:/run/native-preview:ro
+    restart: unless-stopped
+    # Reap orphaned health probes instead of exhausting the bounded PID budget.
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    cpus: 1.0
+    pids_limit: 128
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+    networks: [observer]
+  nginx:
+    image: ${NGINX_IMAGE:-nginx:1.28-alpine}
+    depends_on:
+      backend: {condition: service_healthy}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../.runtime/nginx:/etc/nginx/conf.d:ro
+      - ${TLS_DIR:-./tls}:/etc/nginx/tls:ro
+      - ./acme:/var/www/acme:ro
+    restart: unless-stopped
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+    networks: [observer]
+networks:
+  observer:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${CLOUD_SUBNET:-172.30.88.0/24}

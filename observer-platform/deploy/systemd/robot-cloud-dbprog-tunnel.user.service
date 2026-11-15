@@ -1,0 +1,18 @@
+[Unit]
+Description=Independent authenticated DBProg API and object socket tunnel
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/robot-cloud/video-tunnel.env
+ExecStart=/bin/bash %h/.local/share/robot-cloud/deploy/scripts/dbprog_tunnel.sh
+Restart=always
+RestartSec=5
+TimeoutStopSec=10
+NoNewPrivileges=yes
+UMask=0077
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=Independent authenticated cloud camera socket tunnel (%i)
+After=network-online.target robot-cloud-native-source-tunnel@%i.service
+Wants=network-online.target robot-cloud-native-source-tunnel@%i.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/robot-cloud/video-tunnel.env
+ExecStart=/bin/bash %h/.local/share/robot-cloud/deploy/scripts/native_video_tunnel.sh cloud %i
+Restart=always
+RestartSec=5
+NoNewPrivileges=yes
+UMask=0077
+
+[Install]
+WantedBy=default.target

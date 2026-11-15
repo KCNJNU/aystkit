@@ -1,0 +1,18 @@
+[Unit]
+Description=Receive-only chassis serial telemetry (no robot control)
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+ExecStart=%h/code/upper_computer/run_chassis_telemetry_rx.sh
+WorkingDirectory=%h/code/upper_computer
+Environment=ROS_DOMAIN_ID=0
+Environment=ROS_LOCALHOST_ONLY=0
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+UnsetEnvironment=ROS_DISCOVERY_SERVER CYCLONEDDS_URI FASTRTPS_DEFAULT_PROFILES_FILE
+UMask=0077
+Restart=on-failure
+RestartSec=3
+KillMode=control-group
+TimeoutStopSec=8

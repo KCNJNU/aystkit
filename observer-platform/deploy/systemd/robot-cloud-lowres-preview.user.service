@@ -1,0 +1,20 @@
+[Unit]
+Description=Independent four-camera 640x360 MJPEG preview (camera access only)
+After=network.target
+
+[Service]
+Type=simple
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=OMP_NUM_THREADS=1
+Environment=MKL_NUM_THREADS=1
+ExecStart=/usr/bin/python3 -B %h/.local/share/robot-cloud/usb_camera_preview.py
+Restart=no
+NoNewPrivileges=true
+UMask=0077
+MemoryMax=768M
+TasksMax=64
+CPUQuota=200%
+TimeoutStopSec=8
+KillMode=control-group
+
+# Manual trial only. No Install section; this does not enable boot-time capture.

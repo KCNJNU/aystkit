@@ -1,0 +1,115 @@
+云平台源码交接
+整理日期：2026-11-15（Asia/Shanghai）
+
+一、内容与入口
+
+observer-platform/
+  观测平台 Python/aiohttp 后端、网页前端、传感器资料模块、数仓同源网关。
+  cloud/ 与 shared/ 从当前云端运行容器只读导出，并记录逐文件 SHA256。
+  coverage-config/ 是三维传感器配置页的 React/TypeScript 可编辑源码，来自云端工程。
+  collector/、deploy/、tests/、docs/、依赖锁文件来自维护工作区，用于接口、部署和维护。
+  deploy/ 中也保留了可选的机器人侧集成模板；接手云端无需启停小车设备。
+
+warehouse-platform/
+  DBProg 数仓可编辑工程：NestJS/TypeScript API、后台任务 worker、React/Vite 页面、
+  Prisma schema 和 14 份迁移、Dockerfile、依赖锁文件、部署和使用文档。
+  此目录为当前维护工作区源码，不是只读网页静态文件。
+
+  主要位置：
+  apps/api/src/            API 和后台任务源码
+  apps/api/prisma/         数据模型与数据库迁移
+  apps/api/scripts/        视频组装等工作脚本
+  apps/web/src/            数仓页面源码
+  infra/、scripts/         基础设施和构建、启动辅助文件
+
+  观测工程 cloud/frontend/warehouse/ 是已部署的数仓页面构建产物；
+  修改数仓界面时应改 warehouse-platform/apps/web/src/，再重新构建并接入网关。
+
+  根目录 package.json 和 package-lock.json 属于 npm workspace，必须一起保留。
+
+  .env.example 已改为占位值，需要由接手人员为自己的部署填写。
+
+deployed-snapshot/
+  warehouse-api/、warehouse-worker/ 是此次只读提取的线上应用运行文件。
+  包含实际运行的编译后 JavaScript、Prisma/必要脚本及应用依赖声明，不含 node_modules。
+  compose/ 是当前云端两个工程的 Compose 配置副本，不含私密 .env。
+  RUNTIME_MANIFEST.json 标明镜像、镜像 ID、提取时间、来源与文件 SHA256。
+
+SOURCE_MANIFEST.json     本次交接来源、文件规模及模板处理说明
+SHA256SUMS.txt            包内全部文件校验清单（不含该清单自身）
+检查报告.json             打包结构、完整性与敏感路径检查结果
+版本对照.json             本地旧构建产物与线上运行文件的比较结果
+
+二、当前云端结构
+
+访问入口：https://aystkit.cn/
+数仓入口：https://aystkit.cn/dbprog/
+传感器资料：https://aystkit.cn/sensor-library/
+
+Nginx -> 观测平台/同源网关 -> 数仓 API + worker + PostgreSQL + Redis + MinIO。
+数仓已迁移到云端，采集/上传端向云端写入；数仓并不依赖旧工控机数据库隧道。
+原始视频等文件在对象存储，数据库记录元数据、目录、权限和版本等信息。
+
+现网版本见 deployed-snapshot/RUNTIME_MANIFEST.json：
+  观测平台：robot-observer-cloud:4be5389f8f96e1a18a41ad3263a378d07cc2c8c8
+  数仓 API：robot-warehouse-api:processed-no-size-limit-20261112-86dabc3a5dcb4532
+  数仓 worker：robot-warehouse-worker:processed-no-size-limit-20261112-86dabc3a5dcb4532
+
+三、源码与运行快照的关系
+
+可编辑工程用于后续开发；运行快照用于核对现网版本。
+已发现本地保留的旧编译产物与线上 API/worker 存在差异，所以同时交接运行快照，
+而没有把旧 dist 当作当前线上版本。详细文件列表见“版本对照.json”。
+运行快照不能代替 TypeScript 源码，也不是包含数据库、依赖和系统环境的完整容器镜像。
+本次未重新构建或部署业务系统；接手方修改代码后，应按工程流程构建与测试。
+
+四、开发与构建定位
+
+建议环境：Docker Compose、Python 3.12、Node.js 24/npm；
+数仓基础设施为 PostgreSQL 16、Redis 7、MinIO，DVC 工具由对应 Dockerfile 安装。
+具体依赖以各工程锁文件和 Dockerfile 为准。
+
+观测平台：
+  cd observer-platform
+  python3 -m venv .venv
+  . .venv/bin/activate
+  pip install -r requirements-dev.txt
+  PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest
+
+三维传感器配置页：
+  cd observer-platform/coverage-config
+  npm ci
+  npm test
+  npm run build
+
+数仓：
+  cd warehouse-platform
+  npm ci
+  npm run build
+  npm test
+  npx prisma validate --schema apps/api/prisma/schema.prisma
+
+数仓挂到观测平台 /dbprog/ 时，Web 构建使用：
+  VITE_APP_BASE_PATH=/dbprog/ VITE_API_BASE_URL=/dbprog npm run build --workspace @cleaning-robot/web
+构建输出在 apps/web/dist/，应与观测项目 cloud/frontend/warehouse/ 对接。
+API、对象存储地址通过观测服务配置接入；不要把服务器内网 MinIO 地址作为公网下载地址。
+
+本次只核对归档内容与运行快照，未在新机器重建并启动上述完整环境。
+以上是接手后的构建定位，不会由压缩包自动执行。
+
+五、部署配置与历史文档
+
+当前部署配置参考 deployed-snapshot/compose/ 和 observer-platform/deploy/warehouse/。
+配置中的密码、会话密钥、设备令牌、存储凭据需要自行配置，模板占位值不能直接上线。
+TLS 证书、生产 .env、现有账号与业务数据未包含。
+
+工程 docs 保留了历史维护记录。有些旧文档仍写“数仓在工控机”或旧“地库采集”流程，
+这些属于历史方案；理解现行云端拓扑时以本说明及运行快照为准。
+旧维护记录中的统计数量只代表对应历史时刻。
+
+六、排除与处理范围
+
+不包含真实 .env、SSH/部署私钥、TLS 私钥或证书、生产账号数据库、采集视频、
+对象存储数据、数据库备份、日志、node_modules、虚拟环境、Git 历史和运行缓存。
+示例配置中的凭据赋值已在交接副本中替换成占位，未改动正在使用的工程。
+传感器资料模块的原始规格文档、工程图及资料 ZIP 属于页面必要静态资产，保留在包内。

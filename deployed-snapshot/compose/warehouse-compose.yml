@@ -1,0 +1,106 @@
+# Preparation only: restore the original database, object store and dataset
+# workspace before starting backend/worker. Never seed an empty replacement.
+name: robot-warehouse-cloud
+x-runtime: &runtime
+  env_file: .env
+  environment: &environment
+    API_PORT: 3000
+    DATABASE_URL: ${DATABASE_URL:?Set cloud PostgreSQL connection in private .env}
+    REDIS_HOST: redis
+    REDIS_PORT: 6379
+    OBJECT_STORAGE_ENDPOINT: minio
+    OBJECT_STORAGE_PORT: 9000
+    OBJECT_STORAGE_PUBLIC_ENDPOINT: warehouse-minio
+    OBJECT_STORAGE_PUBLIC_PORT: 9000
+    OBJECT_STORAGE_USE_SSL: "false"
+    DVC_REMOTE_ENDPOINT: minio
+    DVC_COMMAND: /opt/dvc/bin/dvc
+    DVC_REPOSITORY_ROOT: /app/data/dataset-repository
+    # Cloud does not launch drivers or switch the robot's local capture gate.
+    GARAGE_ARCHIVE_CONTROL_DIR: ""
+  restart: unless-stopped
+  security_opt: [no-new-privileges:true]
+  logging:
+    driver: json-file
+    options: {max-size: "10m", max-file: "3"}
+
+services:
+  postgres:
+    image: ${WAREHOUSE_POSTGRES_IMAGE:?Use the tested PostgreSQL 16 image digest}
+    env_file: .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Preserve existing DB owner}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a private cloud DB password}
+      POSTGRES_DB: ${POSTGRES_DB:?Preserve existing DB name}
+    volumes: ["${WAREHOUSE_DATA_DIR:?Set mounted expanded data disk}/postgres:/var/lib/postgresql/data"]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    mem_limit: 256m
+    networks: [warehouse]
+
+  redis:
+    image: ${WAREHOUSE_REDIS_IMAGE:?Use the tested Redis 7 image digest}
+    command: [redis-server, --appendonly, "yes"]
+    volumes: ["${WAREHOUSE_DATA_DIR}/redis:/data"]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    mem_limit: 128m
+    networks: [warehouse]
+
+  minio:
+    image: ${WAREHOUSE_MINIO_IMAGE:?Use the original MinIO image digest}
+    env_file: .env
+    command: [server, /data, --console-address, ":9001"]
+    volumes: ["${WAREHOUSE_DATA_DIR}/minio:/data"]
+    restart: unless-stopped
+    healthcheck:
+      test: [CMD, mc, ready, local]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    mem_limit: 256m
+    networks:
+      warehouse: {}
+      observer: {aliases: [warehouse-minio]}
+
+  backend:
+    <<: *runtime
+    image: ${WAREHOUSE_API_IMAGE:?Use the fully tested warehouse API image digest}
+    environment:
+      <<: *environment
+      # Keep V8's existing heap budget; leave headroom for Prisma and buffers.
+      NODE_OPTIONS: --max-old-space-size=256
+    ports: ["127.0.0.1:13000:3000"]
+    volumes: ["${WAREHOUSE_DATA_DIR}/workspace:/app/data"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      minio: {condition: service_healthy}
+    mem_limit: 512m
+    memswap_limit: 768m
+    networks:
+      warehouse: {}
+      observer: {aliases: [warehouse-api]}
+
+  worker:
+    <<: *runtime
+    image: ${WAREHOUSE_WORKER_IMAGE:?Use the fully tested warehouse worker image digest}
+    volumes: ["${WAREHOUSE_DATA_DIR}/workspace:/app/data"]
+    depends_on:
+      backend: {condition: service_healthy}
+    mem_limit: 384m
+    networks: [warehouse]
+
+networks:
+  warehouse: {internal: true}
+  observer:
+    external: true
+    name: robot-observer-cloud_observer

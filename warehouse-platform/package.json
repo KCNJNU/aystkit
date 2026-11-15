@@ -1,0 +1,22 @@
+{
+  "name": "cleaning-robot-recognition-data-platform",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/api",
+    "apps/web"
+  ],
+  "overrides": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "scripts": {
+    "dev": "node scripts/run-dev.mjs",
+    "build": "npm run build --workspace @cleaning-robot/api && npm run build --workspace @cleaning-robot/web",
+    "build:node": "npm run build",
+    "lint": "npm run lint --workspace @cleaning-robot/api && npm run lint --workspace @cleaning-robot/web",
+    "test": "npm run test --workspace @cleaning-robot/api -- --runInBand && npm run test --workspace @cleaning-robot/web -- --maxWorkers=2 && npm run test:scripts",
+    "test:node": "npm run test",
+    "test:scripts": "node --test scripts/*.test.mjs scripts/release/*.test.mjs"
+  }
+}

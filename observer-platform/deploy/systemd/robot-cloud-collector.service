@@ -1,0 +1,29 @@
+[Unit]
+Description=Read-only robot cloud observation collector
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=orangepi
+Group=orangepi
+WorkingDirectory=/home/orangepi/code/robot-cloud
+EnvironmentFile=/etc/robot-cloud/collector.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=ROS_LOG_DIR=/tmp/robot-cloud-ros
+ExecStart=/bin/bash /home/orangepi/code/robot-cloud/deploy/scripts/run_collector.sh
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+KillMode=control-group
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+# Keep DDS shared-memory visibility; collector code never opens serial devices.
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+MemoryMax=384M
+CPUQuota=100%
+
+[Install]
+WantedBy=multi-user.target

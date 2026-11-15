@@ -1,0 +1,60 @@
+# Runtime credentials and local overrides
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+!**/*.env.example
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.crt
+**/id_rsa*
+**/id_ed25519*
+**/.ssh/
+
+# User data and database/object-store volumes
+/runtime-data/
+/backups/
+/uploads/
+observer-platform/data/
+observer-platform/backups/
+warehouse-platform/data/
+warehouse-platform/apps/api/data/
+warehouse-platform/uploads/
+warehouse-platform/minio-data/
+warehouse-platform/postgres-data/
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+**/*.dump
+**/*.mkv
+**/*.mp4
+**/*.bag
+**/*.mcap
+**/.dvc/cache/
+**/.dvc/config.local
+
+# Dependencies, local tooling, caches and diagnostics
+**/node_modules/
+**/.venv/
+**/.venv-dvc/
+**/__pycache__/
+**/*.py[cod]
+**/.pytest_cache/
+**/.runtime/
+**/.agents/
+**/.vscode/
+**/.npm-cache/
+**/*.log
+**/.DS_Store
+**/tests/artifacts/
+
+# Rebuildable workspace outputs; keep the deployed reference snapshot tracked.
+warehouse-platform/apps/api/dist/
+warehouse-platform/apps/web/dist/
+warehouse-platform/coverage/
+observer-platform/coverage-config/dist/
+observer-platform/coverage-config/coverage/
+
+# Keep Prisma migration SQL, shipped frontend assets and sensor document ZIPs.

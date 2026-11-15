@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a111b">
+  <title>机器人云端观测平台</title>
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/cloud.css">
+  <link rel="stylesheet" href="/fault-logs.css">
+  <link rel="stylesheet" href="/daily-tests.css">
+  <link rel="stylesheet" href="/dbprog.css">
+</head>
+<body class="observer-workspace" data-view="compact" data-camera-layout="two">
+  <header class="topbar">
+    <div class="brand">
+      <button id="workspace-nav-toggle" class="workspace-icon-button workspace-nav-toggle" type="button" aria-label="收起导航" title="收起导航" aria-controls="workspace-sidebar" aria-expanded="true"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3" width="15" height="14" rx="2"/><path d="M7 3v14m4-10-3 3 3 3"/></svg></button>
+      <span class="brand-mark" aria-hidden="true"><i></i><b>工控</b></span>
+      <div class="brand-copy"><strong>工控机观测平台</strong></div>
+    </div>
+    <label class="robot-selector" for="robot-picker"><span>机器人</span><select id="robot-picker" disabled aria-label="选择机器人"><option>正在读取…</option></select></label>
+    <div class="header-telemetry" aria-label="实时数据源状态">
+      <span id="header-live" class="header-signal"><i class="status-dot WAITING_UPSTREAM"></i><b>正在连接页面</b></span>
+      <span id="header-ros" class="header-signal"><i class="status-dot WAITING_UPSTREAM"></i><b>机器人通信</b><em>等待发现</em></span>
+      <span id="header-jetson" class="header-signal"><i class="status-dot WAITING_UPSTREAM"></i><b>机器人</b><em>等待上线</em></span>
+      <time id="clock">—</time>
+      <div class="view-toggle" role="group" aria-label="页面信息密度">
+        <button type="button" data-view-mode="compact" class="active">精简</button>
+        <button type="button" data-view-mode="detailed">详细</button>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar" id="workspace-sidebar">
+    <nav aria-label="观测页面">
+      <button class="nav active" data-page="overview" data-mobile-label="总览" aria-label="系统总览" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3h5v5H3zM12 3h5v5h-5zM3 12h5v5H3zM12 12h5v5h-5z"/></svg><span>总览</span></button>
+      <div class="nav-group" data-nav-group="system">
+        <button class="nav" data-page="system" data-mobile-label="系统" aria-label="工控机系统" aria-expanded="false" aria-controls="subnav-system" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 3h10v14H5zM2 7h3m10 0h3M2 13h3m10 0h3M8 7h4v6H8z"/></svg><span>工控机系统</span><i class="nav-chevron" aria-hidden="true"></i></button>
+        <div class="subnav" id="subnav-system" hidden>
+          <button class="subnav-button" data-route="system/performance" type="button">性能概览</button>
+          <button class="subnav-button" data-route="system/environment" type="button">温度与网络</button>
+          <button class="subnav-button" data-route="system/stm32" type="button">底盘通信 STM32</button>
+          <button class="subnav-button" data-route="system/ros" type="button">机器人通信 ROS2</button>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="robot">
+        <button class="nav" data-page="robot" data-mobile-label="机器人" aria-label="机器人状态" aria-expanded="false" aria-controls="subnav-robot" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7h10v8H5zM8 3h4v4M2 10h3m10 0h3M8 11h.1m3.9 0h.1M7 15v2m6-2v2"/></svg><span>机器人状态</span><i class="nav-chevron" aria-hidden="true"></i></button>
+        <div class="subnav" id="subnav-robot" hidden>
+          <button class="subnav-button" data-route="robot/motion" type="button">底盘与运动</button>
+          <button class="subnav-button" data-route="robot/actuators" type="button">清洁与推杆</button>
+          <button class="subnav-button" data-route="robot/sensors" type="button">感知设备</button>
+          <button class="subnav-button" data-route="robot/docking" type="button">视觉对接</button>
+        </div>
+      </div>
+      <div class="nav-group" data-nav-group="media">
+        <button class="nav" data-page="media" data-mobile-label="画面" aria-label="实时画面" aria-expanded="false" aria-controls="subnav-media" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2" y="4" width="11" height="12" rx="2"/><path d="m13 8 5-3v10l-5-3z"/></svg><span>实时画面</span><i class="nav-chevron" aria-hidden="true"></i></button>
+        <div class="subnav" id="subnav-media" hidden>
+          <button class="subnav-button" data-route="media/cameras" type="button">相机</button>
+          <button class="subnav-button" data-route="media/scans" type="button">二维雷达</button>
+          <button class="subnav-button" data-route="media/clouds" type="button">点云</button>
+          <button class="subnav-button" data-route="media/maps" type="button">地图</button>
+        </div>
+      </div>
+      <button class="nav" data-page="logs" data-mobile-label="日志" aria-label="关键故障日志" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 2h7l4 4v12H5zM12 2v5h4M8 10h5M8 13h5M8 16h3"/></svg><span>关键故障</span></button>
+      <button class="nav" data-page="tests" data-mobile-label="测试" aria-label="每日测试统计" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M6 2v4m8-4v4M3 8h14M6 13l2-2 3 3 3-4"/></svg><span>每日测试</span></button>
+      <a class="coverage-link dbprog-nav" href="/dbprog" aria-label="DBProg 数仓"><svg viewBox="0 0 20 20" aria-hidden="true"><ellipse cx="10" cy="4" rx="6.5" ry="2.5"/><path d="M3.5 4v11c0 3.3 13 3.3 13 0V4M3.5 9.5c0 3.3 13 3.3 13 0"/></svg><span>DBProg 数仓</span></a>
+      <a class="coverage-link" href="/coverage" aria-label="传感器覆盖与盲区配置"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 10 3 3a10 10 0 0 1 14 0zM10 10l-7 7a10 10 0 0 1 0-14zM10 10l7 7a10 10 0 0 1-14 0z"/></svg><span>传感器覆盖与盲区</span></a>
+      <a class="coverage-link sensor-library-nav" href="/sensor-library/" aria-label="传感器资料"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3h6a3 3 0 0 1 3 3v12a3 3 0 0 0-3-3H3zm14 0h-2a3 3 0 0 0-3 3v12a3 3 0 0 1 3-3h2zM6 7h3M6 10h3"/></svg><span>传感器资料</span></a>
+    </nav>
+    <div class="sidebar-bottom"><div class="viewer-account"><span id="viewer-name">正在验证登录…</span><button id="workspace-account-toggle" class="workspace-account-toggle" type="button" aria-label="展开账号操作" aria-expanded="false" aria-controls="workspace-account-controls">账号 <span aria-hidden="true">⌃</span></button><div id="workspace-account-controls" class="workspace-account-controls"><a id="users-link" class="account-manage-link" href="/users" hidden>账号管理</a><a id="password-link" class="account-manage-link" href="/password">修改密码</a><button id="logout-button" type="button">退出登录</button><span id="account-message" role="status"></span></div></div><div class="safety-block"><div><i></i><strong>只读观测</strong></div><span class="detail-only">无控制权限</span></div></div>
+  </aside>
+
+  <main>
+    <aside class="cloud-source-bar" aria-label="云端与机器人连接状态" aria-live="polite"><div class="cloud-source-status"><i id="cloud-robot-dot" class="status-dot WAITING_UPSTREAM"></i><strong id="cloud-robot-status">等待机器人上线</strong></div><span class="detail-only">机器人 <b id="cloud-robot-id">—</b></span><span>来源 <b id="cloud-source-id">工控机</b></span><span class="cloud-detail">最近连接 <b id="cloud-last-seen">—</b></span><span class="cloud-detail">观测采集 <b id="cloud-last-observation">—</b></span><span class="cloud-detail">云端接收 <b id="cloud-last-received">—</b></span><span class="cloud-detail">原始采样 <b id="cloud-actual-timestamp">—</b></span><p id="cloud-source-note">等待采集端上传</p></aside>
+    <section id="page-overview" class="page active" data-page-name="overview">
+      <div class="page-head"><div><h1>运行总览</h1></div><div class="page-tools"><span id="overview-updated" class="last-updated">最近更新 —</span><div class="window-picker" data-window-picker><button type="button" data-window="60">60</button><button type="button" data-window="120" class="active">120</button><button type="button" data-window="300">300</button><span>秒</span></div></div></div>
+      <div id="overview-status" class="status-grid five"></div>
+      <div class="dashboard-grid overview-spatial">
+        <article class="panel span-8 spatial-panel">
+          <header class="panel-head"><div><h2>空间感知</h2></div><span id="overview-spatial-status" class="panel-tag">等待数据</span></header>
+          <div class="spatial-viewport">
+            <canvas id="overview-spatial-canvas" aria-label="真实点云空间视图，可拖动旋转和滚轮缩放" tabindex="0"></canvas>
+            <div id="overview-spatial-empty" class="spatial-empty" role="status">等待点云数据</div>
+            <div class="spatial-toolbar" role="group" aria-label="空间视图视角"><button type="button" data-overview-view="perspective" class="active" aria-pressed="true">空间</button><button type="button" data-overview-view="top" aria-pressed="false">俯视</button><a href="#media/clouds">详细点云 <span aria-hidden="true">↗</span></a></div>
+            <div class="spatial-footer"><span id="overview-spatial-source">—</span><span id="overview-spatial-meta">—</span></div>
+          </div>
+        </article>
+        <article class="panel span-4 overview-focus">
+          <header class="panel-head"><div><h2>运行态势</h2></div></header>
+          <div id="overview-focus-metrics"></div>
+          <a class="spatial-config-link" href="/coverage"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v9l-9 5-9-5V8l9-5Zm0 10v9M3 8l9 5 9-5M7.5 5.5l9 5"/></svg><span>传感器安装与盲区</span><b aria-hidden="true">↗</b></a>
+        </article>
+      </div>
+      <div id="overview-kpis" class="kpi-grid five"></div>
+      <div class="dashboard-grid overview-primary">
+        <article class="panel span-6"><header class="panel-head"><div><h2>系统负载</h2></div><span class="panel-tag">% · °C</span></header><div class="chart-stack"><div class="chart-row"><div><b>处理器使用率</b><span id="overview-cpu-now">—</span></div><canvas data-chart-series="cpu" data-chart-unit="%"></canvas></div><div class="chart-row"><div><b>内存使用率</b><span id="overview-ram-now">—</span></div><canvas data-chart-series="ram" data-chart-unit="%"></canvas></div><div class="chart-row"><div><b>芯片温度</b><span id="overview-temp-now">—</span></div><canvas data-chart-series="temp" data-chart-unit="°C"></canvas></div></div></article>
+        <article class="panel span-6"><header class="panel-head"><div><h2>遥测与电源</h2></div></header><div class="chart-stack"><div class="chart-row"><div><b>遥测频率</b><span id="overview-hz-now">—</span></div><canvas data-chart-series="telemetryHz" data-chart-unit="Hz"></canvas></div><div class="chart-row"><div><b>距上次更新</b><span id="overview-age-now">—</span></div><canvas data-chart-series="telemetryAge" data-chart-unit="s"></canvas></div><div class="chart-row"><div><b>母线电压</b><span id="overview-voltage-now">—</span></div><canvas data-chart-series="voltage" data-chart-unit="V"></canvas></div></div></article>
+      </div>
+      <div class="telemetry-grid" aria-label="实时运行趋势">
+        <article class="panel trend-card"><header class="panel-head"><h2>网络吞吐</h2><span class="panel-tag">KiB/秒</span></header><canvas data-chart-series="networkRx,networkTx" data-chart-labels="接收,发送" data-chart-colors="#68d7e6,#e6b76b" data-chart-unit="KB/s" data-chart-grid="true" aria-label="网络接收和发送速率"></canvas></article>
+        <article class="panel trend-card"><header class="panel-head"><h2>轮速反馈</h2><span class="panel-tag">m/s</span></header><canvas data-chart-series="leftWheel,rightWheel" data-chart-labels="左轮,右轮" data-chart-colors="#68d7e6,#82a9ed" data-chart-unit="m/s" data-chart-grid="true" aria-label="左右轮实际反馈速度"></canvas></article>
+        <article class="panel trend-card"><header class="panel-head"><h2>视频编码帧率</h2><span class="panel-tag">帧/秒</span></header><canvas data-chart-series="cameraFrontFps,cameraRearFps,cameraLeftFps,cameraRightFps" data-chart-labels="前,后,左,右" data-chart-colors="#68d7e6,#82a9ed,#bda0de,#e6b76b" data-chart-unit="帧/秒" data-chart-grid="true" aria-label="前后左右视频实际编码帧率"></canvas></article>
+        <article class="panel trend-card perception-card"><header class="panel-head"><h2>感知采样</h2><span class="panel-tag">点</span></header><div class="perception-charts"><div><span>蓝海扫描</span><canvas data-chart-series="scanPoints" data-chart-labels="蓝海扫描点" data-chart-colors="#68d7e6" data-chart-unit="点" aria-label="扫描点数趋势"></canvas></div><div><span>MID360 点云</span><canvas data-chart-series="cloudPoints" data-chart-labels="MID360 点云点" data-chart-colors="#82a9ed" data-chart-unit="点" aria-label="点云点数趋势"></canvas></div></div></article>
+      </div>
+      <div class="dashboard-grid"><article class="panel span-7 detail-panel"><header class="panel-head"><div><h2>系统健康概览</h2></div></header><div id="system-health" class="health-grid"></div></article><article class="panel span-5 detail-panel"><header class="panel-head"><div><h2>最近状态变化</h2></div></header><div id="state-events" class="event-list"></div></article></div>
+    </section>
+
+    <section id="page-system" class="page" data-page-name="system">
+      <div class="page-head"><div><h1>工控机系统<span class="subpage-title" id="system-subpage-title">性能概览</span></h1></div><div class="window-picker" data-window-picker><button type="button" data-window="60">60</button><button type="button" data-window="120" class="active">120</button><button type="button" data-window="300">300</button><span>秒</span></div></div>
+      <div class="subpage-controls"><label for="system-subpage-picker">查看</label><select class="subpage-picker" id="system-subpage-picker" data-subpage-picker="system"><option value="performance">性能概览</option><option value="environment">温度与网络</option><option value="stm32">底盘通信 STM32</option><option value="ros">机器人通信 ROS2</option></select></div>
+      <div class="subpage active" data-subpage="performance" role="region" aria-label="性能概览">
+        <div id="system-kpis" class="kpi-grid six"></div>
+        <div class="dashboard-grid">
+          <article class="panel chart-panel span-4"><header class="panel-head"><div><h2>处理器负载</h2></div><strong id="system-cpu-now">—</strong></header><canvas data-chart-series="cpu" data-chart-unit="%" data-chart-grid="true"></canvas></article>
+          <article class="panel chart-panel span-4"><header class="panel-head"><div><h2>内存占用</h2></div><strong id="system-ram-now">—</strong></header><canvas data-chart-series="ram" data-chart-unit="%" data-chart-grid="true"></canvas></article>
+          <article class="panel chart-panel span-4"><header class="panel-head"><div><h2>核心温度</h2></div><strong id="system-temp-now">—</strong></header><canvas data-chart-series="temp" data-chart-unit="°C" data-chart-grid="true"></canvas></article>
+        </div>
+      </div>
+      <div class="subpage" data-subpage="environment" role="region" aria-label="温度与网络" hidden>
+        <div class="dashboard-grid">
+          <article class="panel span-7"><header class="panel-head"><div><h2>温度传感器分布</h2></div><span class="panel-tag">°C</span></header><div id="thermal-zones" class="thermal-list"></div></article>
+          <article class="panel span-5"><header class="panel-head"><div><h2>网络接口</h2></div></header><div id="network-interfaces" class="network-list"></div></article>
+        </div>
+      </div>
+      <div id="page-stm32" class="subpage" data-subpage="stm32" role="region" aria-label="底盘通信 STM32" hidden>
+        <div id="stm32-kpis" class="kpi-grid six"></div>
+        <article class="panel"><header class="panel-head"><div><h2>底盘协议数据页</h2></div><span class="panel-tag">5 秒计数差分</span></header><div id="page-health" class="page-health-grid five"></div></article>
+        <div class="dashboard-grid"><article class="panel chart-panel span-7"><header class="panel-head"><div><h2>底盘数据页频率趋势</h2></div></header><canvas data-chart-series="page00,page10,page11,page12,page13" data-chart-labels="0x00,0x10,0x11,0x12,0x13" data-chart-colors="#67d7e8,#77aaff,#ba9eff,#f2bd6b,#ff8798" data-chart-unit="Hz" data-chart-grid="true"></canvas></article><article class="panel span-5 detail-panel"><header class="panel-head"><div><h2>上行接收诊断</h2></div></header><div id="serial-diagnostics" class="diagnostic-grid"></div></article></div>
+      </div>
+      <div id="page-ros" class="subpage" data-subpage="ros" role="region" aria-label="机器人通信 ROS2" hidden>
+        <div id="ros-page-state" class="source-summary"></div>
+        <div id="ros-kpis" class="status-grid four"></div>
+        <div class="dashboard-grid">
+          <article class="panel chart-panel span-6"><header class="panel-head"><div><h2>机器人遥测频率</h2></div><strong id="ros-hz-now">—</strong></header><canvas data-chart-series="telemetryHz" data-chart-unit="Hz" data-chart-grid="true"></canvas></article>
+          <article class="panel chart-panel span-6"><header class="panel-head"><div><h2>距上次更新</h2></div><strong id="ros-age-now">—</strong></header><canvas data-chart-series="telemetryAge" data-chart-unit="s" data-chart-grid="true"></canvas></article>
+          <article class="panel span-7 detail-panel"><header class="panel-head"><div><h2>ROS2 话题健康状态</h2></div></header><div id="topic-health" class="table-wrap"></div></article>
+          <article class="panel span-5 detail-panel"><header class="panel-head"><div><h2>通信发现环境 DDS</h2></div></header><div id="dds-environment" class="diagnostic-grid"></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-robot" class="page" data-page-name="robot">
+      <div class="page-head"><div><h1>机器人状态<span class="subpage-title" id="robot-subpage-title">底盘与运动</span></h1></div><div id="robot-summary" class="source-summary"></div></div>
+      <div class="subpage-controls"><label for="robot-subpage-picker">查看</label><select class="subpage-picker" id="robot-subpage-picker" data-subpage-picker="robot"><option value="motion">底盘与运动</option><option value="actuators">清洁与推杆</option><option value="sensors">感知设备</option><option value="docking">视觉对接</option></select></div>
+      <div class="subpage active" data-subpage="motion" role="region" aria-label="底盘与运动">
+        <div id="robot-kpis" class="kpi-grid six"></div>
+        <div class="dashboard-grid">
+          <article class="panel span-6"><header class="panel-head"><div><h2>实际线速度</h2></div><span class="panel-tag">m/s</span></header><div id="linear-comparison" class="comparison actual-only"></div><div class="comparison-chart"><canvas data-chart-series="actualVx" data-chart-labels="实际线速度" data-chart-colors="#67d7e8" data-chart-unit="m/s" data-chart-grid="true"></canvas></div></article>
+          <article class="panel span-6"><header class="panel-head"><div><h2>实际角速度</h2></div><span class="panel-tag">rad/s</span></header><div id="angular-comparison" class="comparison actual-only"></div><div class="comparison-chart"><canvas data-chart-series="actualWz" data-chart-labels="实际角速度" data-chart-colors="#77aaff" data-chart-unit="rad/s" data-chart-grid="true"></canvas></div></article>
+          <article class="panel chart-panel span-12"><header class="panel-head"><div><h2>轮速实际反馈</h2></div></header><canvas data-chart-series="leftWheel,rightWheel" data-chart-labels="左轮,右轮" data-chart-colors="#67d7e8,#77aaff" data-chart-unit="m/s" data-chart-grid="true"></canvas></article>
+        </div>
+      </div>
+      <div class="subpage" data-subpage="actuators" role="region" aria-label="清洁与推杆" hidden>
+        <div class="dashboard-grid">
+          <article class="panel span-12"><header class="panel-head"><div><h2>清洁机构</h2></div></header><div id="brush-cards" class="actuator-grid four"></div></article>
+          <article class="panel span-12"><header class="panel-head"><div><h2>推杆反馈</h2></div></header><div id="lift-cards" class="actuator-grid two"></div></article>
+        </div>
+      </div>
+      <div class="subpage" data-subpage="sensors" role="region" aria-label="感知设备" hidden>
+        <article class="panel sensor-panel"><header class="panel-head"><div><h2>感知与导航设备</h2></div><a class="panel-tag coverage-panel-link" href="/coverage">覆盖与盲区 · 3D</a></header><div id="sensor-overview" class="status-grid four"></div><div id="sensor-health" class="table-wrap detail-panel"></div></article>
+      </div>
+      <div class="subpage" data-subpage="docking" role="region" aria-label="视觉对接" hidden>
+        <div class="dashboard-grid">
+          <article class="panel span-12"><header class="panel-head"><div><h2>ArUco 标记识别</h2></div><span class="panel-tag">5×5 标记</span></header><div id="aruco-preview-cameras" class="status-grid four" aria-live="polite"></div></article>
+          <article class="panel span-12"><header class="panel-head"><div><h2>视觉对接状态</h2></div></header><div id="vision-docking-summary" class="status-grid four"></div><div id="vision-docking-details" class="diagnostic-grid detail-panel"></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="page-media" class="page" data-page-name="media">
+      <div class="page-head"><div><h1>实时画面<span class="subpage-title" id="media-subpage-title">相机</span></h1></div></div>
+      <div class="subpage-controls"><label for="media-subpage-picker">查看</label><select class="subpage-picker" id="media-subpage-picker" data-subpage-picker="media"><option value="cameras">相机</option><option value="scans">二维雷达</option><option value="clouds">点云</option><option value="maps">地图</option></select></div>
+      <div class="subpage active" data-subpage="cameras" role="region" aria-label="相机">
+        <div class="workspace-camera-tools"><div class="workspace-layout-picker" role="group" aria-label="相机画面布局"><button type="button" data-camera-layout-choice="one" aria-pressed="false" title="单列画面"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="3" width="14" height="12" rx="2"/></svg><span>单列</span></button><button type="button" data-camera-layout-choice="two" aria-pressed="true" class="active" title="双列画面"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="2" y="3" width="14" height="12" rx="2"/><path d="M9 3v12"/></svg><span>双列</span></button><button type="button" data-camera-layout-choice="three" aria-pressed="false" title="三列画面"><svg viewBox="0 0 18 18" aria-hidden="true"><rect x="1.5" y="3" width="15" height="12" rx="2"/><path d="M6.5 3v12m5-12v12"/></svg><span>三列</span></button></div></div>
+        <div id="video-lease-notice" class="video-lease-notice" role="status" hidden><span>视频已在本浏览器的其他页面播放</span><button type="button" id="video-lease-takeover" class="media-view">在此播放</button></div>
+        <div id="camera-gallery" class="media-grid"></div>
+      </div>
+      <div class="subpage" data-subpage="scans" role="region" aria-label="二维雷达" hidden>
+        <p class="media-legend detail-only">本地 XY · 未融合 · 非导航地图</p><div id="scan-gallery" class="media-grid media-grid-scans"></div>
+      </div>
+      <div class="subpage" data-subpage="clouds" role="region" aria-label="点云" hidden>
+        <p class="media-legend detail-only">抽样点云 · 独立坐标系</p><div id="cloud-gallery" class="media-grid"></div>
+      </div>
+      <div class="subpage" data-subpage="maps" role="region" aria-label="地图" hidden>
+        <p class="media-legend">白：空闲 · 黑：占用 / 高代价 · 灰：未知</p><div id="map-gallery" class="media-grid"></div>
+      </div>
+    </section>
+    <section id="page-tests" class="page" data-page-name="tests">
+      <div class="page-head dt-page-head"><div><h1>每日测试</h1><small id="tests-today-date">今日 · 北京时间</small><span id="tests-summary-scope" class="dt-scope">我的记录</span></div><div class="dt-actions"><button id="tests-refresh" type="button">刷新</button><button type="button" data-tests-export="csv">下载 CSV</button><button type="button" data-tests-export="json">下载 JSON</button></div></div>
+      <div class="dt-summary">
+        <article class="panel dt-kpi"><span id="tests-today-duration-label">今日我的测试时长</span><strong id="tests-today-duration" class="dt-time">—</strong><small>小时 : 分钟 : 秒</small></article>
+        <article class="panel dt-kpi"><span id="tests-today-distance-label">今日我的移动距离</span><strong id="tests-today-distance" class="dt-distance">—</strong><small>米 · <span id="tests-distance-quality">等待记录</span></small></article>
+        <article class="panel dt-kpi"><span id="tests-today-sessions-label">今日我的测试</span><strong id="tests-today-sessions">—</strong><small>次</small></article>
+        <article class="panel dt-kpi"><span>数据状态</span><strong id="tests-source-status" class="dt-source-status" data-tone="waiting">等待里程数据</strong><small id="tests-source-detail">正在读取采集状态</small></article>
+      </div>
+      <article class="panel dt-current">
+        <div class="dt-current-head"><div class="dt-current-title"><div class="dt-eyebrow"><span id="tests-current-account" class="dt-current-account">当前账号</span> <span id="tests-run-state" class="dt-run-state" data-state="idle">尚未开始</span><span id="tests-sync-status" class="dt-sync-badge" hidden>里程同步中</span></div><h2 id="tests-run-name">准备开始新的测试</h2><p id="tests-run-tester" class="dt-run-tester" hidden></p><p id="tests-run-start"></p><p id="tests-own-summary" class="dt-own-summary">我的今日时长 —</p></div><div class="dt-current-metrics"><span>本次时长</span><span>本次距离</span><strong id="tests-active-duration">—</strong><strong id="tests-active-distance">—</strong><small id="tests-active-quality"></small></div></div>
+        <div class="dt-current-footer"><div id="tests-registration-fields" class="dt-registration-fields"><label id="tests-tester-name-wrap" class="dt-name-label" for="tests-tester-name"><span>测试人员姓名 <small class="dt-required">必填</small></span><input id="tests-tester-name" type="text" maxlength="60" placeholder="请输入姓名" autocomplete="off" required aria-describedby="tests-message"></label><label id="tests-name-wrap" class="dt-name-label" for="tests-name"><span>测试名称</span><input id="tests-name" type="text" maxlength="60" placeholder="选填" autocomplete="off"></label></div><div class="dt-control-actions"><span class="dt-stat-only">仅控制统计</span><button id="tests-start" class="dt-primary" type="button" disabled>开始测试</button><button id="tests-pause" type="button" hidden disabled>暂停统计</button><button id="tests-resume" class="dt-primary" type="button" hidden disabled>继续统计</button><button id="tests-finish" class="dt-finish" type="button" hidden disabled>结束测试</button></div></div>
+      </article>
+      <section id="tests-issues-panel" class="panel dt-issues-panel" aria-label="测试问题记录">
+        <header class="panel-head dt-issues-head">
+          <div><h2>测试问题记录</h2></div>
+          <span id="tests-issues-status" class="dt-issues-status" data-tone="waiting">正在读取问题清单…</span>
+        </header>
+        <div id="tests-issues-review" class="dt-issues-review" hidden>
+          <div class="dt-issues-review-head"><strong id="tests-issues-review-title">前一天的问题</strong></div>
+          <div id="tests-issues-pending" class="dt-issues-list"></div>
+        </div>
+        <div class="dt-issues-today">
+          <div class="dt-issues-today-head"><strong>今日新增问题</strong><span id="tests-issues-today-date">—</span></div>
+          <div id="tests-issues-current" class="dt-issues-list"><p class="dt-empty">今天还没有记录问题</p></div>
+          <form id="tests-issue-form" class="dt-issue-form">
+            <label for="tests-issue-description">记录遇到的问题</label>
+            <div class="dt-issue-form-row"><input id="tests-issue-description" type="text" maxlength="240" placeholder="问题内容" autocomplete="off" required><select id="tests-issue-category" aria-label="问题分类"><option value="通用">通用</option><option value="相机">相机</option><option value="雷达">雷达</option><option value="定位">定位</option><option value="底盘">底盘</option><option value="网络">网络</option></select><button id="tests-issue-add" class="dt-primary" type="submit">添加问题</button></div>
+          </form>
+        </div>
+      </section>
+      <p id="tests-message" class="dt-message" role="status" aria-live="polite"></p>
+      <section id="tests-admin-overview" class="panel dt-admin-panel" aria-label="全部账号测试汇总" hidden>
+        <header class="panel-head dt-admin-head"><div><h2>账号汇总 <span id="tests-account-count" class="panel-tag"></span></h2></div><div class="dt-admin-total"><span>累计测试时长</span><strong id="tests-all-duration">—</strong></div></header>
+        <div class="dt-table-wrap"><table class="dt-table"><thead><tr><th scope="col">账号</th><th scope="col">今日时长</th><th scope="col">累计时长</th><th scope="col">累计次数</th><th scope="col">当前状态</th></tr></thead><tbody id="tests-users-body"></tbody></table></div>
+      </section>
+      <div class="dt-chart-grid-layout">
+        <article class="panel dt-chart-panel"><header class="panel-head"><h2>近 7 日测试时长</h2><span class="panel-tag">分钟</span></header><div id="tests-duration-chart" class="dt-chart"></div></article>
+        <article class="panel dt-chart-panel"><header class="panel-head"><h2>近 7 日移动距离</h2><span class="panel-tag">米</span></header><div id="tests-distance-chart" class="dt-chart"></div></article>
+      </div>
+      <article class="panel dt-table-panel"><header class="panel-head"><h2>每日记录 <span class="panel-tag">近 30 天</span></h2><span id="tests-updated" class="dt-updated">正在读取记录…</span></header><div class="dt-table-wrap"><table class="dt-table"><thead><tr><th scope="col">日期 · 北京时间</th><th scope="col">测试时长</th><th scope="col">移动距离</th><th scope="col">测试次数</th><th scope="col">里程记录</th><th scope="col">测试人员</th></tr></thead><tbody id="tests-days-body"><tr><td class="dt-empty" colspan="6">正在读取每日记录…</td></tr></tbody></table></div></article>
+      <details class="panel dt-sessions"><summary><span>测试明细</span><small id="tests-run-count">正在读取…</small></summary><div id="tests-runs-list"></div></details>
+    </section>
+
+    <section id="page-logs" class="page" data-page-name="logs" aria-label="关键故障日志">
+      <div class="page-head fault-page-head"><div><h1>关键故障日志</h1><span id="fault-retention" class="fault-retention">近 30 天 · 最多 2 万条</span></div><div class="fault-actions"><button id="fault-refresh" type="button">刷新</button><button type="button" data-fault-export="csv">下载 CSV</button><button type="button" data-fault-export="json">下载 JSON</button></div></div>
+      <div class="fault-summary" aria-label="日志统计">
+        <article class="panel"><span>故障类型</span><strong id="fault-summary-total">—</strong><small>类</small></article>
+        <article class="panel fault-summary-error"><span>错误 / 严重</span><strong id="fault-summary-error">—</strong><small>类</small></article>
+        <article class="panel fault-summary-warning"><span>关键告警</span><strong id="fault-summary-warning">—</strong><small>类</small></article>
+        <article class="panel"><span>最近发生 · 北京时间</span><strong id="fault-summary-latest" class="fault-summary-time">—</strong><small id="fault-monitor-status">正在读取采集状态</small></article>
+      </div>
+      <section class="panel fault-categories-panel" aria-label="按传感器和系统类型筛选">
+        <header><h2>传感器与系统分类</h2></header>
+        <div id="fault-categories" class="fault-category-grid" role="group" aria-label="故障分类"></div>
+      </section>
+      <form id="fault-filter-form" class="panel fault-filters" aria-label="筛选故障日志">
+        <label>时间范围<select id="fault-range"><option value="24h">最近 24 小时</option><option value="1h">最近 1 小时</option><option value="7d">最近 7 天</option><option value="all">全部保留记录</option><option value="custom">自定义 · 北京时间</option></select></label>
+        <label>级别<select id="fault-level"><option value="">全部关键故障</option><option value="ERROR">错误</option><option value="FATAL">严重</option><option value="WARN">关键告警</option></select></label>
+        <label class="fault-search">关键词<input id="fault-query" type="search" maxlength="200" placeholder="搜索设备、中文含义或原始日志" autocomplete="off"></label>
+        <button type="submit">查询</button><button id="fault-reset" class="fault-secondary" type="button">重置</button>
+        <div id="fault-custom-range" class="fault-custom-range" hidden><label>开始 · 北京时间<input id="fault-start" type="datetime-local" step="1"></label><label>结束 · 北京时间<input id="fault-end" type="datetime-local" step="1"></label></div>
+        <p id="fault-filter-error" class="fault-filter-error" role="alert" hidden></p>
+      </form>
+      <article class="panel fault-list-panel">
+        <header class="panel-head"><div><h2>关键故障记录 <span id="fault-result-count" class="fault-result-count">—</span></h2></div><span id="fault-updated" class="fault-updated" role="status" aria-live="polite">正在连接日志服务</span></header>
+        <div class="fault-columns" aria-hidden="true"><span>首次 / 最近 · 北京时间</span><span>级别</span><span>传感器 / 设备</span><span>报错含义</span><span>次数</span></div>
+        <div id="fault-log-list" class="fault-log-list" aria-busy="false"><p class="fault-empty">正在读取关键故障记录…</p></div>
+        <footer class="fault-pagination"><span id="fault-page-label">第 1 页</span><div><button id="fault-prev" type="button" disabled>上一页</button><button id="fault-next" type="button" disabled>下一页</button></div></footer>
+      </article>
+      <p id="fault-export-status" class="fault-export-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <button id="workspace-to-top" class="workspace-icon-button workspace-to-top" type="button" aria-label="回到顶部" title="回到顶部" hidden><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 12 6-6 6 6M10 6v11M4 3h12"/></svg></button>
+
+  <script src="/fleet.js"></script>
+  <script src="/cloud.js"></script>
+  <script src="/formatters.js"></script>
+  <script src="/charts.js"></script>
+  <script src="/video-lease.js"></script>
+  <script src="/native-player.js"></script>
+  <script src="/detection-overlay.js"></script>
+  <script src="/media.js"></script>
+  <script src="/app.js"></script>
+  <script src="/fault-logs.js"></script>
+  <script src="/daily-tests.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+name: CI
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  warehouse:
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: warehouse_ci
+          POSTGRES_USER: warehouse_ci
+          POSTGRES_PASSWORD: warehouse_ci
+        ports: [5432:5432]
+        options: >-
+          --health-cmd "pg_isready -U warehouse_ci -d warehouse_ci"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://warehouse_ci:warehouse_ci@localhost:5432/warehouse_ci?schema=public
+    steps:
+      - uses: actions/checkout@v6
+        with: { fetch-depth: 0, persist-credentials: false }
+      - uses: actions/setup-node@v6
+        with: { node-version: 24, cache: npm }
+      - run: npm ci
+      - run: cp .env.example .env
+      - run: npx prisma generate --schema apps/api/prisma/schema.prisma
+      - run: npx prisma validate --schema apps/api/prisma/schema.prisma
+      - run: npx prisma migrate deploy --schema apps/api/prisma/schema.prisma
+      - run: npm run build
+      - run: npm run lint
+      - run: npm run test
+      - run: docker compose --env-file .env.example config --quiet

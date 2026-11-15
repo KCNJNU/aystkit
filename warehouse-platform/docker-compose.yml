@@ -1,0 +1,107 @@
+x-backend-environment: &backend-environment
+  API_PORT: 3000
+  DATABASE_URL: postgresql://${POSTGRES_USER:-cleaning_robot}:${POSTGRES_PASSWORD:-cleaning_robot_dev}@postgres:5432/${POSTGRES_DB:-cleaning_robot}?schema=public
+  REDIS_HOST: redis
+  REDIS_PORT: 6379
+  OBJECT_STORAGE_ENDPOINT: minio
+  OBJECT_STORAGE_PORT: 9000
+  OBJECT_STORAGE_PUBLIC_ENDPOINT: ${OBJECT_STORAGE_PUBLIC_ENDPOINT:-localhost}
+  OBJECT_STORAGE_PUBLIC_PORT: ${OBJECT_STORAGE_PUBLIC_PORT:-9000}
+  DVC_REMOTE_ENDPOINT: minio
+  DVC_COMMAND: /opt/dvc/bin/dvc
+  DVC_REPOSITORY_ROOT: /app/data/dataset-repository
+  CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+
+services:
+  postgres:
+    restart: unless-stopped
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-cleaning_robot}
+      POSTGRES_USER: ${POSTGRES_USER:-cleaning_robot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-cleaning_robot_dev}
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  redis:
+    restart: unless-stopped
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: ["redis_data:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  minio:
+    restart: unless-stopped
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports: ["9000:9000", "127.0.0.1:9001:9001"]
+    volumes: ["minio_data:/data"]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  storage-init:
+    image: minio/mc:latest
+    depends_on:
+      minio: { condition: service_healthy }
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+      RAW_BUCKET: ${OBJECT_STORAGE_BUCKET:-robot-raw-files}
+      DVC_BUCKET: ${DVC_REMOTE_BUCKET:-robot-dvc-store}
+    entrypoint: ["/bin/sh", "-c"]
+    command: ['mc alias set warehouse http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD" && mc mb --ignore-existing "warehouse/$$RAW_BUCKET" "warehouse/$$DVC_BUCKET"']
+  migration:
+    build: { context: ., dockerfile: apps/api/Dockerfile, target: migration }
+    env_file: .env
+    environment: *backend-environment
+    depends_on:
+      postgres: { condition: service_healthy }
+  backend:
+    restart: unless-stopped
+    build: { context: ., dockerfile: apps/api/Dockerfile, target: runtime }
+    env_file: .env
+    environment:
+      <<: *backend-environment
+      GARAGE_ARCHIVE_CONTROL_DIR: /app/garage-archive-control
+    ports: ["127.0.0.1:3000:3000"]
+    volumes:
+      - dataset_data:/app/data
+      - ./.runtime/garage-archive-control:/app/garage-archive-control
+    depends_on:
+      migration: { condition: service_completed_successfully }
+      redis: { condition: service_healthy }
+      storage-init: { condition: service_completed_successfully }
+  worker:
+    restart: unless-stopped
+    build: { context: ., dockerfile: apps/api/Dockerfile, target: worker }
+    env_file: .env
+    environment: *backend-environment
+    volumes: ["dataset_data:/app/data"]
+    depends_on:
+      backend: { condition: service_healthy }
+  web:
+    restart: unless-stopped
+    build: { context: ., dockerfile: apps/web/Dockerfile }
+    ports: ["5173:8080"]
+    environment:
+      NEST_UPSTREAM: backend:3000
+    depends_on:
+      backend: { condition: service_healthy }
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  dataset_data:

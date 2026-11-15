@@ -1,0 +1,16 @@
+[Unit]
+Description=Read-only camera occupancy status and existing video gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 -B %h/.local/share/robot-cloud/camera_status_gateway.py --capture-config %h/.config/robot-cloud/cameras.json
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+UMask=0077
+MemoryMax=256M
+CPUQuota=50%
+TasksMax=64
+

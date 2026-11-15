@@ -1,0 +1,209 @@
+/* The shell is a compact instrument frame. Module surfaces keep their own layout. */
+.warehouse-shell.industrial-shell {
+  --industrial-ink: #263445;
+  --industrial-muted: #748093;
+  --industrial-line: #dce2ea;
+  --industrial-blue: #2b61cc;
+  --warehouse-header-height: 84px;
+  background: #eef1f5;
+}
+.warehouse-shell.industrial-shell > .ant-layout { background: #eef1f5; }
+.warehouse-shell.industrial-shell .app-sider {
+  top: 12px;
+  height: calc(100dvh - 24px);
+  margin: 12px 0 12px 12px;
+  border-color: #d5dde8;
+  border-radius: 12px;
+  background: #fff !important;
+  box-shadow: 0 1px 2px #14233b0a, 3px 0 14px -9px #14233b24;
+}
+.warehouse-shell.industrial-shell .navigation-shell { background: #fff; }
+.warehouse-shell.industrial-shell .navigation-shell .brand {
+  height: 76px;
+  min-height: 76px;
+  padding-inline: 18px;
+  border-bottom: 1px solid var(--industrial-line);
+}
+.warehouse-shell.industrial-shell .navigation-shell .brand-mark {
+  width: 36px;
+  min-width: 36px;
+  height: 36px;
+  border: 1px solid #2357bd;
+  border-radius: 9px;
+  background: #3169d1;
+  box-shadow: inset 0 1px #ffffff40, 0 2px 2px #193a761c;
+}
+.warehouse-shell.industrial-shell .navigation-shell .brand strong { color: #263445; font-size: 14px; font-weight: 700; letter-spacing: .01em; }
+.warehouse-shell.industrial-shell .navigation-main { padding-top: 10px; }
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu { padding-inline: 10px; }
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item-group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 12px 7px;
+  color: #798598;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item-group-title::after { content: ''; flex: 1; height: 1px; background: #edf0f4; }
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 43px;
+  line-height: 41px;
+  padding-inline: 10px !important;
+  margin: 3px 0;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  color: #526173;
+  font-size: 13px;
+  transition: border-color .16s, background .16s, color .16s;
+}
+.warehouse-shell.industrial-shell .navigation-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 27px;
+  border: 1px solid #e5eaf0;
+  border-radius: 6px;
+  background: #f8f9fb;
+}
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item .navigation-icon .anticon { color: #758599; font-size: 15px; }
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item:hover { background: #f3f6fa !important; border-color: #e5eaf1; color: #294e88 !important; box-shadow: none; }
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item-selected,
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item-selected:is(:hover, :active) {
+  border-color: #d8e4f8;
+  background: #edf3fd !important;
+  color: #245abf !important;
+  box-shadow: inset 3px 0 #2e65ce;
+  font-weight: 650;
+}
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item-selected .navigation-icon { border-color: #ceddf7; background: #fff; box-shadow: 0 1px 2px #254c8c0c; }
+.warehouse-shell.industrial-shell .navigation-shell .ant-menu-item-selected .anticon { color: #2b61cc !important; }
+.warehouse-shell.industrial-shell .navigation-bottom { padding-top: 12px; margin-top: 10px; border-top: 1px solid #e2e7ee; background: #fafbfd; }
+.warehouse-shell.industrial-shell .navigation-section-label { padding: 0 22px 7px; color: #7b8798; font-size: 11px; }
+.warehouse-shell.industrial-shell .observer-return { margin-inline: 12px; color: #62738a; }
+.warehouse-shell.industrial-shell .navigation-health {
+  display: flex;
+  align-items: center;
+  width: calc(100% - 24px);
+  margin: 8px 12px 0;
+  padding: 9px 11px;
+  border: 1px solid #e0e6ef;
+  border-radius: 7px;
+  background: #fff;
+  color: #69768a;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 1px 2px #14233b05;
+  transition: border-color .16s, box-shadow .16s;
+}
+.warehouse-shell.industrial-shell .navigation-health:hover { border-color: #b9cbe9; box-shadow: 0 2px 5px #14233b0a; }
+.warehouse-shell.industrial-shell .navigation-health-arrow { margin-left: auto; color: #8b99ac; font-size: 14px; }
+.warehouse-shell.industrial-shell .navigation-shell.is-compact .brand { padding-inline: 19px; }
+.warehouse-shell.industrial-shell .navigation-shell.is-compact .ant-menu { width: 76px; padding-inline: 10px; }
+.warehouse-shell.industrial-shell .navigation-shell.is-compact .ant-menu-item { display: block; padding-inline: 13px !important; }
+.warehouse-shell.industrial-shell .navigation-shell.is-compact .navigation-icon { vertical-align: middle; }
+.warehouse-shell.industrial-shell .navigation-shell.is-compact .ant-menu-item-group-title { height: 18px; padding: 0; font-size: 0; }
+.warehouse-shell.industrial-shell .navigation-shell.is-compact .ant-menu-item-group-title::after { display: none; }
+.warehouse-shell.industrial-shell .navigation-shell.is-compact .navigation-health { width: 36px; margin-inline: auto; padding: 10px; }
+
+.warehouse-shell.industrial-shell .app-header {
+  top: 12px;
+  height: 72px;
+  margin: 12px 22px 0;
+  padding-inline: 16px;
+  border: 1px solid #d7dfe9;
+  border-radius: 11px 11px 0 0;
+  background: #fff !important;
+  backdrop-filter: none;
+  box-shadow: 0 1px 2px #14233b05;
+}
+.warehouse-shell.industrial-shell .collapse-button.ant-btn { width: 31px; height: 31px; border-radius: 6px; border-color: #e3e8ef; background: #fafbfd; color: #6c7c90; }
+.warehouse-shell.industrial-shell .module-context { gap: 9px; }
+.warehouse-shell.industrial-shell .module-context .module-context-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid #e1e8f1; border-radius: 7px; background: #f5f8fc; color: #57739c; font-size: 15px; }
+.warehouse-shell.industrial-shell .module-context strong { color: #344358; font-size: 13px; font-weight: 650; }
+.warehouse-shell.industrial-shell .module-context strong::before { display: none; }
+.warehouse-shell.industrial-shell .header-tools { gap: 10px; }
+.warehouse-shell.industrial-shell .header-fleet-context { gap: 8px; border-color: #dce4ef; border-radius: 7px; background: #f8fafd; box-shadow: none; }
+.warehouse-shell.industrial-shell .header-fleet-context.is-selected { border-color: #c9d9f2; background: #f0f5fd; }
+.warehouse-shell.industrial-shell .header-fleet-context .robot-fleet-select { width: 166px; }
+.warehouse-shell.industrial-shell .app-header .global-search-button { width: clamp(160px, 15vw, 220px); height: 35px; border-radius: 7px; border-color: #e0e5ee; background: #f6f8fb; color: #7b899b; box-shadow: inset 0 1px 2px #14233b05; }
+.warehouse-shell.industrial-shell .app-header .header-create { height: 35px; border-radius: 7px; border-color: #c8d7ed; background: #fff; box-shadow: 0 1px 2px #14233b07; color: #3c5e90; }
+.warehouse-shell.industrial-shell .system-entry .ant-avatar { background: #617b9d; border-radius: 9px; border-color: #fff; box-shadow: 0 1px 3px #14233b1f; }
+.warehouse-shell.industrial-shell .system-entry .account-copy .ant-typography { color: #415168; }
+
+.warehouse-shell.industrial-shell .workspace-contextbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  min-height: 39px;
+  margin: 0 22px;
+  padding: 0 17px;
+  border: 1px solid #d7dfe9;
+  border-top: 0;
+  border-radius: 0 0 9px 9px;
+  background: #fafbfd;
+  color: #728197;
+  font-size: 11px;
+  box-shadow: 0 2px 3px #14233b04;
+}
+.warehouse-shell.industrial-shell .workspace-breadcrumb { display: flex; align-items: center; min-width: 0; gap: 10px; }
+.warehouse-shell.industrial-shell .workspace-breadcrumb > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.warehouse-shell.industrial-shell .workspace-breadcrumb [aria-current] { color: #4e6079; font-weight: 550; }
+.warehouse-shell.industrial-shell .workspace-breadcrumb-separator { color: #b1bdcc; }
+.warehouse-shell.industrial-shell .workspace-context-actions { display: flex; align-items: center; justify-content: flex-end; flex-shrink: 0; gap: 15px; }
+.warehouse-shell.industrial-shell .workspace-scope { display: inline-flex; align-items: center; gap: 7px; color: #748399; }
+.warehouse-shell.industrial-shell .workspace-scope > span:not(.anticon) { overflow: hidden; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; }
+.warehouse-shell.industrial-shell .workspace-scope > b { padding: 0 5px; border-radius: 4px; background: #eaf0f7; color: #6b7d97; line-height: 18px; font-size: 10px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.warehouse-shell.industrial-shell .workspace-running-tasks { display: inline-flex; align-items: center; gap: 7px; height: 25px; padding: 0 8px; border: 1px solid #e0e7f0; border-radius: 5px; background: #fff; color: #738298; font: inherit; font-size: 11px; white-space: nowrap; cursor: pointer; transition: border-color .16s, color .16s; }
+.warehouse-shell.industrial-shell .workspace-running-tasks:hover { border-color: #b9cce9; color: #2b61cc; }
+.warehouse-shell.industrial-shell .workspace-running-tasks b { color: #4c607e; font-weight: 650; font-variant-numeric: tabular-nums; }
+.warehouse-shell.industrial-shell .workspace-running-tasks > .anticon { font-size: 8px; color: #9ba9bc; }
+.warehouse-shell.industrial-shell .workspace-task-indicator { width: 5px; height: 5px; border-radius: 50%; background: #a0afc1; }
+.warehouse-shell.industrial-shell .workspace-running-tasks.has-running-tasks .workspace-task-indicator { background: #2b7cba; box-shadow: 0 0 0 3px #e8f2fb; }
+.warehouse-shell.industrial-shell .app-content { padding-top: 24px; }
+
+@media (max-width: 1279px) {
+  .warehouse-shell.industrial-shell .app-header { margin-inline: 18px; padding-inline: 12px; }
+  .warehouse-shell.industrial-shell .workspace-contextbar { margin-inline: 18px; padding-inline: 13px; }
+  .warehouse-shell.industrial-shell .header-tools { gap: 8px; }
+  .warehouse-shell.industrial-shell .header-fleet-context .robot-fleet-select { width: 145px; }
+  .warehouse-shell.industrial-shell .app-header .global-search-button { width: 170px; }
+  .warehouse-shell.industrial-shell .app-header .global-search-button kbd { display: none; }
+}
+@media (max-width: 1099px) {
+  .warehouse-shell.industrial-shell .module-context .module-context-icon { display: none; }
+  .warehouse-shell.industrial-shell .module-context strong { max-width: 90px; overflow: hidden; text-overflow: ellipsis; }
+  .warehouse-shell.industrial-shell .app-header .global-search-button { width: 34px; min-width: 34px; padding: 0; justify-content: center; }
+  .warehouse-shell.industrial-shell .app-header .global-search-button .search-label { display: none; }
+  .warehouse-shell.industrial-shell .header-tools { gap: 7px; }
+}
+@media (max-width: 767px) {
+  .warehouse-shell.industrial-shell { --warehouse-header-height: 64px; }
+  .warehouse-shell.industrial-shell .app-header { top: 8px; height: 56px; margin: 8px 10px 0; padding-inline: 9px; border-radius: 9px 9px 0 0; }
+  .warehouse-shell.industrial-shell .module-context { display: none; }
+  .warehouse-shell.industrial-shell .workspace-contextbar { min-height: 36px; margin-inline: 10px; padding-inline: 10px; gap: 8px; }
+  .warehouse-shell.industrial-shell .workspace-context-actions { gap: 0; }
+  .warehouse-shell.industrial-shell .workspace-scope { display: none; }
+  .warehouse-shell.industrial-shell .workspace-breadcrumb { gap: 7px; font-size: 10px; }
+  .warehouse-shell.industrial-shell .workspace-running-tasks { gap: 6px; padding-inline: 6px; font-size: 10px; }
+  .warehouse-shell.industrial-shell .workspace-running-tasks > .anticon { display: none; }
+  .warehouse-shell.industrial-shell .header-tools { gap: 5px; }
+  .warehouse-shell.industrial-shell .header-fleet-context { gap: 5px; padding-left: 7px; }
+  .warehouse-shell.industrial-shell .header-fleet-context .robot-fleet-select { width: 109px; }
+  .warehouse-shell.industrial-shell .app-header .global-search-button { width: 30px; min-width: 30px; height: 30px; }
+  .warehouse-shell.industrial-shell .app-content { padding-top: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .warehouse-shell.industrial-shell :is(.navigation-shell .ant-menu-item, .navigation-health, .workspace-running-tasks) { transition: none; }
+}

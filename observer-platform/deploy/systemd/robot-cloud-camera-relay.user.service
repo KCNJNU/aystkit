@@ -1,0 +1,21 @@
+[Unit]
+Description=Read-only bounded snapshots from existing Jetson camera previews
+After=network.target
+
+[Service]
+Type=simple
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=OMP_NUM_THREADS=1
+Environment=MKL_NUM_THREADS=1
+ExecStart=/usr/bin/python3 -B %h/.local/share/robot-cloud/http_camera_relay.py
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+UMask=0077
+MemoryMax=256M
+TasksMax=32
+CPUQuota=50%
+TimeoutStopSec=5
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1320">
+  <title>账号管理 · 观测平台</title>
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/cloud.css">
+  <link rel="stylesheet" href="/access.css">
+</head>
+<body class="login-page access-page" data-access-page="users">
+  <header class="access-header">
+    <a class="access-brand" href="/">工控机 <span>观测平台</span></a>
+    <div class="access-header-actions"><span id="access-username"></span><a class="access-button secondary" href="/password">修改密码</a><button id="access-logout" class="access-button secondary" type="button">退出登录</button></div>
+  </header>
+  <main class="users-main">
+    <div class="users-heading"><div><a class="access-back" href="/">← 返回观测</a><h1>账号管理</h1></div><button id="users-refresh" class="access-button secondary" type="button">刷新列表</button></div>
+    <p id="access-message" class="access-message" role="status" aria-live="polite"></p>
+    <section class="users-panel" aria-labelledby="pending-users-title">
+      <div class="users-section-heading"><h2 id="pending-users-title">待审批</h2><span id="pending-count" class="user-count">—</span></div>
+      <p id="pending-empty" class="users-empty">正在加载…</p>
+      <ul id="pending-users" class="users-list" aria-label="待审批账号"></ul>
+    </section>
+    <section class="users-panel" aria-labelledby="approved-users-title">
+      <div class="users-section-heading"><h2 id="approved-users-title">已批准</h2><span id="approved-count" class="user-count">—</span></div>
+      <p id="approved-empty" class="users-empty">正在加载…</p>
+      <ul id="approved-users" class="users-list" aria-label="已批准账号"></ul>
+    </section>
+    <dialog id="reset-password-dialog" class="password-dialog" aria-labelledby="reset-password-title">
+      <form id="reset-password-form" class="access-form">
+        <h2 id="reset-password-title">重置用户密码</h2>
+        <p id="reset-password-username"></p>
+        <label for="reset-new-password">新密码</label>
+        <input id="reset-new-password" type="password" autocomplete="new-password" required>
+        <label for="reset-new-password-confirm">确认新密码</label>
+        <input id="reset-new-password-confirm" type="password" autocomplete="new-password" required>
+        <p id="reset-password-message" class="access-message" role="status" aria-live="polite"></p>
+        <div class="user-actions"><button id="reset-password-cancel" class="access-button secondary" type="button">取消</button><button id="reset-password-submit" class="access-button primary" type="submit">保存新密码</button></div>
+      </form>
+    </dialog>
+  </main>
+  <script src="/access.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+[Unit]
+Description=Read-only robot cloud observation collector
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/code/robot-cloud
+EnvironmentFile=%h/.config/robot-cloud/collector.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=ROS_LOG_DIR=/tmp/robot-cloud-ros-%u
+Environment=ROS_DOMAIN_ID=0
+Environment=ROS_LOCALHOST_ONLY=0
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+Environment=COLLECTOR_CHASSIS_SOURCE=ros2
+Environment=ROBOT_ROS_SETUP=%h/code/upper_computer/install/setup.bash
+UnsetEnvironment=ROS_DISCOVERY_SERVER CYCLONEDDS_URI FASTRTPS_DEFAULT_PROFILES_FILE
+ExecStart=/bin/bash %h/code/robot-cloud/deploy/scripts/run_collector.sh
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=15
+KillMode=control-group
+NoNewPrivileges=true
+UMask=0077
+MemoryMax=384M
+CPUQuota=100%
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,7 @@
+{
+  "schemaVersion": 1,
+  "mode": "cloud",
+  "apiUrl": "http://127.0.0.1:13000/api",
+  "publicUrl": "https://aystkit.cn/dbprog/",
+  "unit": "robot-warehouse-cloud-api-tunnel.service"
+}

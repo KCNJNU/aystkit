@@ -1,0 +1,10 @@
+# Preserve the audited source bytes, including existing line endings.
+* -text
+
+# Shipped document and rendering assets are binary.
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.zip binary
+*.wasm binary

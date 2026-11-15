@@ -1,0 +1,290 @@
+/* Workspace chrome, materials and interaction. Business/status colors stay semantic. */
+:root {
+  --page-bg: #eef2f8;
+  --bg: #eef2f8;
+  --text: #21324a;
+  --text-secondary: #65758e;
+  --border: #dce4f0;
+  --accent: #3168df;
+  --surface-shadow: 0 1px 2px #172e5210, 0 8px 24px -12px #23427224, 0 24px 48px -36px #23427238;
+  --surface-shadow-hover: 0 2px 4px #172e5210, 0 12px 28px -12px #23427230, 0 28px 56px -32px #23427238;
+}
+
+body { background: var(--page-bg); }
+.tech-atmosphere { background: radial-gradient(ellipse at 75% -20%, #e0e9fb 0, transparent 55%), #eef2f8; }
+.warehouse-shell > .ant-layout { min-width: 0; background: transparent; }
+.warehouse-shell .app-content { padding: 28px 28px 48px; }
+.warehouse-shell .route-stage { max-width: 1680px; }
+.warehouse-shell .data-workspace, .warehouse-shell .admin-workspace { gap: 20px; }
+.warehouse-shell .app-content:focus { outline: none; }
+.workspace-skip-link { position: fixed; left: 24px; top: -60px; padding: 10px 18px; background: #fff; color: #2455bd; border: 2px solid #3168df; border-radius: 10px; z-index: 2000; box-shadow: var(--surface-shadow-hover); }
+.workspace-skip-link:focus { top: 16px; }
+
+/* The navigation rail and command bar have separate physical edges. */
+.warehouse-shell .app-sider {
+  top: 14px; height: calc(100dvh - 28px); margin: 14px 0 14px 14px;
+  border: 1px solid #dce4f0; border-radius: 18px; overflow: hidden;
+  background: #fff !important; box-shadow: 0 1px 3px #233e6010, 0 12px 30px -16px #233e6033;
+}
+.warehouse-shell .navigation-shell { background: linear-gradient(160deg, #fff 40%, #f8faff); }
+.warehouse-shell .navigation-shell .brand { height: 84px; min-height: 84px; padding-inline: 20px; background: transparent; border-bottom: 1px solid #e8edf6; }
+.warehouse-shell .navigation-shell .brand-mark { border-radius: 12px; box-shadow: inset 0 1px 1px #ffffffb3, inset 0 -2px 1px #234cae44, 0 3px 0 -1px #bed0f1, 0 7px 12px -5px #315dba66; }
+.warehouse-shell .navigation-shell .brand strong { color: #263c5e; font-size: 15px; letter-spacing: 0; }
+.warehouse-shell .navigation-main { padding-top: 4px; }
+.warehouse-shell .navigation-shell .ant-menu { padding-inline: 12px; }
+.warehouse-shell .navigation-shell .ant-menu-item-group-title { padding-top: 18px; padding-bottom: 8px; font-size: 11px; font-weight: 600; letter-spacing: .03em; color: #71819a; }
+.warehouse-shell .navigation-shell .ant-menu-item { height: 43px; line-height: 41px; margin-block: 4px; border-radius: 10px; font-size: 13px; color: #536783; }
+.warehouse-shell .navigation-shell .ant-menu-item .anticon { color: #8393ab; font-size: 17px; filter: none; }
+.warehouse-shell .navigation-shell .ant-menu-item:hover { background: #edf3ff !important; border-color: #e2eafa; box-shadow: inset 0 1px #fff; }
+.warehouse-shell .navigation-shell .ant-menu-item-selected {
+  color: #fff !important; border-color: #2f64ce;
+  background: linear-gradient(110deg, #396fdf, #2859c8) !important;
+  box-shadow: inset 0 1px #ffffff40, 0 3px 5px #2f5eb61c, 0 7px 14px -6px #2f5eb66b;
+}
+.warehouse-shell .navigation-shell .ant-menu-item-selected:is(:hover, :active),
+.warehouse-shell .navigation-shell .ant-menu-item-selected .anticon { color: #fff !important; }
+.warehouse-shell .navigation-shell .ant-menu-item-selected:hover { background: linear-gradient(110deg, #4278e7, #3164d2) !important; }
+.warehouse-shell .navigation-bottom { border-top-color: #e5ebf5; margin-top: 8px; padding-top: 12px; padding-bottom: 12px; background: #f7f9fd; }
+.warehouse-shell .navigation-section-label { padding-left: 26px; color: #71819a; font-size: 11px; }
+.warehouse-shell .navigation-health { margin-inline: 16px; padding-block: 9px; border-color: #e0e8f3; background: #fff; color: #5e7594; border-radius: 8px; box-shadow: 0 1px 3px #1e3b5f08; }
+.warehouse-shell .navigation-shell.is-compact .brand { padding-inline: 17px; }
+.warehouse-shell .navigation-shell.is-compact .ant-menu-item { padding-inline: 16px !important; }
+.warehouse-shell .navigation-shell.is-compact .navigation-health { margin-inline: 18px; justify-content: center; }
+.warehouse-shell .observer-return { margin-inline: 16px; }
+
+.warehouse-shell .app-header {
+  top: 14px; height: 64px; margin: 14px 24px 0; padding-inline: 18px;
+  border: 1px solid #dce4f1; border-radius: 16px;
+  background: #ffffffed !important; backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px #fff, 0 1px 3px #233e6010, 0 12px 28px -20px #233e6044;
+}
+.warehouse-shell .collapse-button.ant-btn { width: 34px; height: 34px; border-color: #e2e9f4; background: #f8fafd; border-radius: 9px; color: #607694; }
+.warehouse-shell .module-context strong { color: #435976; font-size: 13px; font-weight: 600; }
+.warehouse-shell .module-context strong::before { display: none; }
+.warehouse-shell .header-tools { gap: 12px; }
+.header-fleet-context { display: flex; align-items: center; gap: 8px; min-width: 0; padding-left: 12px; border: 1px solid #dbe4f3; border-radius: 10px; background: linear-gradient(125deg, #f0f5ff, #f9fbff); box-shadow: inset 0 1px #fff; color: #6486bb; }
+.header-fleet-context.is-selected { border-color: #c9daf8; color: #2f66c9; background: #f0f5ff; }
+.header-fleet-context > .anticon { font-size: 17px; flex: 0 0 auto; }
+.header-fleet-context .robot-fleet-select { width: 172px; }
+.warehouse-shell .header-fleet-context .robot-fleet-select .ant-select-selector { background: transparent; border: none; box-shadow: none; padding-left: 0; }
+.warehouse-shell .header-fleet-context .ant-select-selection-item { color: #3d5a85; font-size: 12px; font-weight: 600; }
+.warehouse-shell .header-fleet-context:focus-within { outline: 2px solid #8eb1f1; outline-offset: 2px; }
+.warehouse-shell .app-header .global-search-button { width: clamp(165px, 15vw, 230px); background: #f2f5fa; border-color: #e2e8f2; box-shadow: inset 0 1px 2px #23427208; }
+.warehouse-shell .app-header .global-search-button:hover { background: #f8faff !important; border-color: #bfd1ef !important; color: #3168d8 !important; }
+.warehouse-shell .system-entry { padding: 3px 5px; border-radius: 10px; transition: background .18s; }
+.warehouse-shell .system-entry:hover { background: #f0f5ff; }
+.warehouse-shell .system-entry .ant-avatar { border: 2px solid #fff; background: linear-gradient(145deg, #89ace8, #537cc3); box-shadow: 0 1px 3px #24467524, 0 4px 9px -5px #24467555; }
+.workspace-route-progress { position: absolute; top: 0; left: 28px; right: 28px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, #3168df, #a6c0f5, #3168df); background-size: 200% 100%; animation: warehouse-progress 1.2s linear infinite; }
+@keyframes warehouse-progress { to { background-position: -200% 0; } }
+
+/* Page identity is compact. The control deck carries the working context. */
+.warehouse-shell .page-header { min-height: 48px; padding-bottom: 0; margin-bottom: 24px; border: 0; align-items: center; }
+.warehouse-shell .page-header::after { display: none; }
+.warehouse-shell .page-header-copy { align-items: center; gap: 14px; }
+.warehouse-shell .page-header h2 { margin: 0 !important; color: #233752 !important; font-size: 29px; font-weight: 700; letter-spacing: -.03em; line-height: 1.45; }
+.warehouse-shell .page-identity-icon { width: 44px; height: 44px; flex-basis: 44px; margin: 0; border-radius: 13px; background: linear-gradient(145deg, #fff, #dfebff); border-color: #cbdcf5; color: #4679c8; box-shadow: inset 0 1px #fff, 0 3px 0 -1px #ccdcef, 0 7px 12px -6px #3f6ea94d; }
+.warehouse-shell .page-header-actions .ant-btn { height: 39px; padding-inline: 17px; border-radius: 10px; }
+.warehouse-shell .app-content :is(.ant-card, .studio-panel, .explorer-surface, .admin-panel, .status-service-tile) { box-shadow: var(--surface-shadow); border-color: #dce5f1; }
+.warehouse-shell .app-content .ant-card-head { background: #fcfdff; border-bottom-color: #e7edf6; }
+.warehouse-shell .ant-btn { transition: color .16s, background .16s, border-color .16s, box-shadow .16s, transform .16s; }
+.warehouse-shell .ant-btn-default:not(:disabled):not(.ant-btn-dangerous) { color: #476080; border-color: #d4dfef; background: linear-gradient(#fff, #f9fbff); box-shadow: inset 0 1px #fff, 0 1px 2px #233f6b0a; }
+.warehouse-shell .ant-btn-default:not(:disabled):hover { box-shadow: 0 3px 8px -5px #315fae66; }
+.warehouse-shell .ant-btn:not(:disabled):active { transform: translateY(1px); }
+.warehouse-shell .ant-btn-primary:not(:disabled) { background: linear-gradient(155deg, #5b8df0 0, #3772df 45%, #275bc8 100%); border-color: #3064ce; box-shadow: inset 0 1px #ffffff66, inset 0 -1px #1b4baf66, 0 3px 0 -1px #b3c8ef, 0 7px 14px -6px #2f60be80; }
+.warehouse-shell .ant-btn-primary:not(:disabled):hover { background: linear-gradient(155deg, #6998f4, #447ee9 45%, #3166d5); box-shadow: inset 0 1px #ffffff66, 0 4px 0 -2px #b3c8ef, 0 9px 16px -6px #2f60be80; }
+.warehouse-shell :is(button, a, input, [tabindex]):focus-visible { outline: 2px solid #6b98eb; outline-offset: 3px; }
+.warehouse-shell .ant-tag { line-height: 21px; }
+
+.warehouse-shell .dataset-control-deck { min-width: 0; overflow: hidden; border: 1px solid #dbe5f3; border-radius: 15px; background: #fff; box-shadow: inset 0 1px #fff, var(--surface-shadow); }
+.warehouse-shell .dataset-control-deck .dataset-robot-categories { margin: 0; padding: 13px 17px 12px; gap: 8px; border-bottom: 1px solid #e7edf6; background: linear-gradient(110deg, #f7faff, #fcfdff); scrollbar-width: thin; }
+.warehouse-shell .dataset-control-deck .dataset-robot-categories > button { flex-shrink: 0; padding: 8px 13px; min-height: 36px; gap: 8px; border-radius: 9px; border-color: transparent; color: #667b99; background: transparent; box-shadow: none; transition: color .16s, background .16s, box-shadow .16s; }
+.warehouse-shell .dataset-control-deck .dataset-robot-categories > button:hover { background: #eaf1ff; color: #3468c8; }
+.warehouse-shell .dataset-control-deck .dataset-robot-categories > button.is-selected { color: #2d63c4; border-color: #d4e1f7; background: #fff; box-shadow: inset 0 1px #fff, 0 2px 3px #1f3f7008, 0 5px 12px -7px #315fae55; }
+.warehouse-shell .dataset-control-deck .dataset-robot-categories > button.is-selected .anticon { color: #427bdc; }
+.warehouse-shell .dataset-control-deck .dataset-search-bar { border: 0; border-radius: 0; background: #fff; box-shadow: none; }
+.warehouse-shell .dataset-control-deck .dataset-search-bar > .ant-card-body { padding: 16px 18px; }
+.warehouse-shell .dataset-search-row { grid-template-columns: minmax(180px, 1fr) 156px auto; gap: 12px; }
+.warehouse-shell .dataset-search-row .ant-input-search .ant-input-affix-wrapper { background: #f6f8fc; border-color: #e2e9f3; }
+.warehouse-shell .dataset-search-row .ant-input-search input { background: transparent; }
+.warehouse-shell .dataset-search-row .ant-input-search .ant-input-affix-wrapper-focused { background: #fff; }
+.warehouse-shell .dataset-collection-toolbar { min-height: 38px; margin-top: 1px; margin-bottom: -6px; }
+.warehouse-shell .dataset-collection-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; min-width: 0; }
+.warehouse-shell .dataset-collection-title h2 { margin: 0; color: #3c5475; font-size: 14px; font-weight: 650; }
+.warehouse-shell .dataset-collection-title h2::before { display: none; }
+.warehouse-shell .dataset-collection-title > span { font-size: 12px; line-height: 20px; color: #65758e; }
+.warehouse-shell .dataset-view-toggle { display: flex; align-items: center; gap: 3px; padding: 3px; border-radius: 10px; border: 1px solid #d9e3f1; background: #e8eef7; box-shadow: inset 0 1px 2px #25466b08, 0 1px #fff; }
+.warehouse-shell .dataset-view-toggle .ant-btn { width: 32px; height: 29px; min-width: 0; padding: 0; color: #8394ad; border-radius: 7px; }
+.warehouse-shell .dataset-view-toggle .ant-btn.is-active { background: #fff; color: #356acb; box-shadow: 0 1px 3px #25466b1a, 0 3px 6px -3px #25466b33; }
+.warehouse-shell .dataset-refresh { color: #6e829f; }
+.warehouse-shell .dataset-card-grid { row-gap: 16px; }
+.warehouse-shell .data-workspace .dataset-card { border-radius: 13px; border-color: #dbe4f1; background: linear-gradient(155deg, #fff 75%, #f7faff); box-shadow: var(--surface-shadow); }
+.warehouse-shell .data-workspace .dataset-card::before { left: 18px; right: 18px; height: 1px; background: linear-gradient(90deg, #fff, #d6e6ff, #fff); }
+.warehouse-shell .data-workspace .dataset-card:hover { transform: translateY(-3px); border-color: #aec7ec; box-shadow: var(--surface-shadow-hover); }
+.warehouse-shell .data-workspace .dataset-card > .ant-card-body { padding: 17px 17px 12px; }
+.dataset-card-heading { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.warehouse-shell .data-workspace .dataset-card-heading h4.ant-typography { flex: 1; min-width: 0; margin: 0; font-size: 14px; line-height: 1.6; letter-spacing: 0; color: #314b71; }
+.warehouse-shell .dataset-card-heading .dataset-icon { flex: 0 0 32px; width: 32px; height: 32px; border-radius: 9px; font-size: 17px; }
+.warehouse-shell .dataset-card .dataset-robot-label { display: inline-flex; max-width: 100%; margin-top: 10px; margin-bottom: 0; padding-inline: 7px; color: #6c83a4; font-size: 11px; line-height: 20px; background: #f5f8fd; border-color: #e4ebf7; }
+.warehouse-shell .dataset-card .dataset-robot-label > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.warehouse-shell .data-workspace .dataset-description { margin: 10px 0 0; min-height: 0; font-size: 12px; color: #6c7d94; }
+.warehouse-shell .data-workspace .dataset-stats { padding: 11px 9px; margin: 13px 0 11px; border: 1px solid #e8edf6; background: #f4f7fc; border-radius: 9px; box-shadow: inset 0 1px 2px #23427204, 0 1px #fff; }
+.warehouse-shell .data-workspace .dataset-stats span { color: #67788f; font-size: 12px; }
+.warehouse-shell .data-workspace .dataset-stats strong { color: #3a557b; font-size: 15px; line-height: 1.5; font-weight: 650; }
+.warehouse-shell .dataset-card-footer { min-height: 24px; }
+.warehouse-shell .data-workspace .dataset-updated { min-width: 0; gap: 5px; color: #6d7e96; font-size: 11px; white-space: nowrap; }
+.warehouse-shell .dataset-card-footer .ant-tag { flex-shrink: 0; margin: 0; line-height: 19px; font-size: 11px; border-radius: 5px; }
+.warehouse-shell .dataset-card-footer .status-dot { width: 4px; height: 4px; }
+.warehouse-shell .data-workspace .dataset-card .ant-card-actions { background: linear-gradient(#fbfdff, #f4f7fc); border-top-color: #e4ebf5; }
+.warehouse-shell .data-workspace .dataset-card .ant-card-actions > li { margin-block: 5px; }
+.warehouse-shell .data-workspace .dataset-card .ant-card-actions .ant-btn { height: 29px; font-size: 12px; }
+.warehouse-shell .data-workspace .dataset-card .ant-card-actions > li:first-child .ant-btn { font-weight: 600; }
+.warehouse-shell .dataset-list-surface { overflow: hidden; border: 1px solid #dce5f1; border-radius: 14px; background: #fff; box-shadow: var(--surface-shadow); }
+.warehouse-shell .dataset-list-table .ant-table-tbody > tr > td { padding-block: 15px; }
+.dataset-list-identity { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.dataset-list-identity > div { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+.dataset-list-icon { display: grid; place-items: center; flex: 0 0 34px; height: 34px; border: 1px solid #d8e5f8; background: linear-gradient(145deg, #fff, #eaf2ff); border-radius: 10px; color: #5c8ac9; box-shadow: inset 0 1px #fff, 0 2px 4px #294d7c0a; font-size: 19px; }
+.dataset-list-name { padding: 0; border: 0; background: none; color: #36557e; font: inherit; font-size: 13px; font-weight: 600; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.dataset-list-name:hover { color: #2f68d6; }
+.warehouse-shell .dataset-list-identity .dataset-robot-label { margin: 0; color: #6c7e98; background: #f6f9fd; font-size: 11px; line-height: 19px; }
+.dataset-list-version { color: #5c7495; font-size: 12px; font-weight: 600; }
+.dataset-mobile-list { list-style: none; padding: 0 15px; margin: 0; border: 1px solid #dce5f1; border-radius: 13px; background: #fff; box-shadow: var(--surface-shadow); }
+.dataset-mobile-list > li { padding: 15px 0 10px; border-bottom: 1px solid #e8eef7; }
+.dataset-mobile-list > li:last-child { border-bottom: 0; }
+.dataset-mobile-list .dataset-robot-label { margin: 0; color: #6c7e98; font-size: 11px; line-height: 19px; background: #f6f9fd; }
+.dataset-mobile-list-footer { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 5px; padding-top: 7px; }
+.dataset-mobile-list-footer time { color: #6d7f98; font-size: 11px; }
+.dataset-mobile-list-footer .ant-btn { font-size: 11px; padding-inline: 7px; height: 30px; }
+.warehouse-shell .workspace-pagination { padding-top: 10px; }
+.warehouse-shell .ant-pagination .ant-pagination-item-active { border-color: #648de0; background: #fff; box-shadow: 0 2px 6px #3767bd1a; }
+
+/* One navigation ribbon remains visible above the file workspace. */
+.warehouse-shell .data-workspace.dataset-explorer { gap: 18px; }
+.warehouse-shell .data-workspace .explorer-heading { align-items: center; padding: 0 2px; }
+.warehouse-shell .data-workspace .explorer-heading h1 { font-size: 25px; margin: 0; color: #263d5e; letter-spacing: -.02em; }
+.warehouse-shell .data-workspace .explorer-heading p { margin: 7px 0 0; color: #6c7d94; font-size: 12px; }
+.warehouse-shell .data-workspace .explorer-dataset-icon { width: 40px; height: 40px; flex-basis: 40px; border-radius: 12px; }
+.warehouse-shell .data-workspace .explorer-navigation { top: 90px; padding: 12px 15px; gap: 10px; border-color: #d1dff3; border-radius: 13px; background: #ffffffed; backdrop-filter: blur(12px); box-shadow: inset 0 1px #fff, 0 3px 6px #294e7a08, 0 12px 24px -14px #294e7a44; }
+.warehouse-shell .data-workspace .explorer-navigation-buttons { gap: 10px; }
+.warehouse-shell .explorer-history-controls { padding: 3px; border: 1px solid #dde7f6; border-radius: 10px; background: #edf3fc; box-shadow: inset 0 1px 2px #294e7a05; }
+.warehouse-shell .explorer-history-controls .ant-btn { height: 32px; border: 0; border-radius: 7px !important; box-shadow: none !important; background: transparent; color: #3c67a7; padding-inline: 12px; }
+.warehouse-shell .explorer-history-controls .ant-btn:not(:disabled) { background: #fff; box-shadow: 0 1px 3px #25466b12 !important; }
+.warehouse-shell .explorer-history-controls .ant-btn:disabled { color: #a2b1c7; background: transparent; }
+.warehouse-shell .explorer-history-controls .ant-btn + .ant-btn { margin-left: 4px; }
+.warehouse-shell .explorer-parent-button { border-style: dashed; }
+.warehouse-shell .data-workspace .explorer-location { border-top-color: #e6edf7; padding-top: 9px; }
+.warehouse-shell .data-workspace .explorer-crumb { padding: 4px 7px; color: #6682a7; font-size: 12px; border-radius: 6px; }
+.warehouse-shell .data-workspace .explorer-current-crumb { padding: 4px 7px; color: #3163a7; background: #edf4ff; border-radius: 6px; font-size: 12px; }
+.warehouse-shell .data-workspace .explorer-surface { border-radius: 14px; box-shadow: var(--surface-shadow); }
+.warehouse-shell .data-workspace .explorer-toolbar { padding: 15px 18px; min-height: 70px; border-bottom: 1px solid #e6edf7; background: linear-gradient(#fff, #fcfdff); }
+.warehouse-shell .data-workspace .explorer-directory-summary { gap: 6px 12px; }
+.warehouse-shell .data-workspace .explorer-directory-summary > strong { font-size: 14px; color: #3a5579; }
+.warehouse-shell .data-workspace .explorer-directory-summary > span { color: #6d7e96; font-size: 11px; }
+.warehouse-shell .data-workspace .explorer-actions .ant-btn { font-size: 12px; height: 34px; }
+.warehouse-shell .data-workspace .explorer-folders { grid-template-columns: repeat(auto-fill, minmax(265px, 1fr)); gap: 12px; padding: 18px; }
+.warehouse-shell .data-workspace .explorer-folder-card { position: relative; display: flex; flex-direction: row; align-items: center; gap: 2px; padding-right: 7px; min-width: 0; border: 1px solid #dce6f4; border-radius: 11px; background: linear-gradient(135deg, #fff, #f3f7fe); box-shadow: inset 0 1px #fff, 0 2px 4px #294d7c05, 0 5px 12px -8px #294d7c33; transition: border-color .18s, box-shadow .18s, transform .18s; }
+.warehouse-shell .data-workspace .explorer-folder-card:hover { transform: translateY(-2px); border-color: #b9cfee; box-shadow: var(--surface-shadow-hover); }
+.warehouse-shell .data-workspace .explorer-folder-card > .explorer-folder { min-width: 0; padding: 15px 12px; gap: 11px; border-radius: 11px; box-shadow: none; background: transparent; }
+.warehouse-shell .data-workspace .explorer-folder-card > .explorer-folder:hover { transform: none; box-shadow: none; }
+.warehouse-shell .data-workspace .folder-art { flex-shrink: 0; font-size: 28px; color: #80a5d8; filter: drop-shadow(0 2px 0 #d6e4f7); }
+.warehouse-shell .data-workspace .folder-card-text { gap: 4px; }
+.warehouse-shell .data-workspace .folder-card-text strong { color: #4b678e; font-size: 13px; line-height: 1.6; }
+.warehouse-shell .data-workspace .folder-card-text .archive-entry-label { color: #71839d; font-size: 11px; }
+.warehouse-shell .data-workspace .explorer-folder-download { flex-shrink: 0; min-width: 60px; height: 30px; padding-inline: 7px; margin: 0; align-self: center; color: #7892b7; border-radius: 8px; font-size: 11px; }
+.warehouse-shell .data-workspace .explorer-folder-download .ant-btn-icon { margin: 0; }
+.warehouse-shell .data-workspace .explorer-folder-download:hover { background: #e6efff; color: #3469c7; }
+.warehouse-shell .data-workspace .explorer-file-table { padding: 0 18px 16px; }
+.warehouse-shell .app-content .ant-table-wrapper .ant-table-thead > tr > th { background: #f3f6fb; color: #627893; font-size: 12px; font-weight: 600; border-bottom-color: #dfe7f3; }
+.warehouse-shell .app-content .ant-table-wrapper .ant-table-tbody > tr > td { border-bottom-color: #edf1f7; }
+.warehouse-shell .app-content .ant-table-wrapper .ant-table-tbody > tr:nth-child(even):not(.ant-table-row-selected) > td { background: #fcfdff; }
+.warehouse-shell .app-content .ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > td { background: #f2f6ff !important; }
+.warehouse-shell .app-content .ant-table-wrapper .ant-table-tbody > tr.ant-table-row-selected > td { background: #edf3ff; }
+.warehouse-shell .data-workspace .explorer-file-copy strong { color: #416087; font-size: 13px; }
+.warehouse-shell .data-workspace .explorer-file-link > span:first-child { border-radius: 9px; color: #7196c9; }
+.warehouse-shell .data-workspace .explorer-drop { padding: 2px 18px 18px; }
+.warehouse-shell .data-workspace .explorer-drop .ant-upload-drag { border-color: #d7e3f5 !important; background: #f8fbff !important; border-radius: 10px; }
+.warehouse-shell .data-workspace .explorer-drop .ant-upload-drag:hover { border-color: #7fa8e7 !important; background: #f1f6ff !important; }
+.warehouse-shell .data-workspace .explorer-drop .ant-upload-drag-container { gap: 8px; color: #72849e; font-size: 11px; }
+.warehouse-shell .data-workspace .explorer-drop .ant-upload-btn { padding: 11px !important; }
+.warehouse-shell .file-grid-card:hover { border-color: #b9cfee; box-shadow: var(--surface-shadow-hover); }
+.warehouse-shell .filter-bar { border-color: #dce5f1; }
+.warehouse-shell .admin-tabs > .ant-tabs-nav { background: #fff; box-shadow: var(--surface-shadow); border-radius: 12px; }
+
+@media (max-width: 1280px) {
+  .warehouse-shell .app-header { margin-inline: 20px; }
+  .warehouse-shell .app-content { padding-inline: 24px; }
+  .warehouse-shell .header-tools { gap: 9px; }
+  .header-fleet-context .robot-fleet-select { width: 150px; }
+  .warehouse-shell .app-header .global-search-button { width: 175px; min-width: 0; }
+  .warehouse-shell .app-header .global-search-button kbd { display: none; }
+}
+@media (max-width: 1023px) {
+  .warehouse-shell .app-header { padding-inline: 12px; }
+  .warehouse-shell .app-header .global-search-button { width: 34px; height: 34px; padding: 0; min-width: 34px; justify-content: center; }
+  .warehouse-shell .app-header .global-search-button .search-label { display: none; }
+  .warehouse-shell .header-fleet-context .robot-fleet-select { width: 140px; }
+  .warehouse-shell .module-context strong { max-width: 92px; overflow: hidden; text-overflow: ellipsis; }
+  .warehouse-shell .data-workspace .explorer-toolbar { align-items: flex-start; gap: 12px; }
+  .warehouse-shell .data-workspace .explorer-actions { justify-content: flex-start; }
+}
+@media (max-width: 767px) {
+  .warehouse-shell .app-header { top: 8px; height: 58px; margin: 8px 10px 0; padding-inline: 9px; border-radius: 13px; }
+  .warehouse-shell .app-content { padding: 22px 14px 32px; }
+  .warehouse-shell .data-workspace, .warehouse-shell .admin-workspace { gap: 17px; }
+  .warehouse-shell .module-context { display: none; }
+  .warehouse-shell .header-tools { gap: 6px; }
+  .warehouse-shell .header-fleet-context { gap: 5px; padding-left: 8px; border-radius: 8px; }
+  .warehouse-shell .header-fleet-context > .anticon { font-size: 15px; }
+  .warehouse-shell .header-fleet-context .robot-fleet-select { width: 109px; }
+  .warehouse-shell .header-fleet-context .ant-select-selection-item { font-size: 11px; }
+  .warehouse-shell .system-entry { padding: 0; gap: 0; }
+  .warehouse-shell .system-entry .ant-avatar { width: 30px; height: 30px; line-height: 26px; font-size: 12px; }
+  .warehouse-shell .notification-button { width: 30px; padding-inline: 0; }
+  .warehouse-shell .app-header .global-search-button { width: 30px; min-width: 30px; }
+  .warehouse-shell .collapse-button.ant-btn { width: 30px; height: 32px; }
+  .warehouse-shell .page-header { gap: 12px; min-height: 42px; }
+  .warehouse-shell .page-header h2 { font-size: 24px; }
+  .warehouse-shell .page-header-copy { gap: 11px; }
+  .warehouse-shell .page-identity-icon { width: 38px; height: 38px; flex-basis: 38px; border-radius: 11px; font-size: 19px; }
+  .warehouse-shell .page-header-actions .ant-btn { height: 35px; padding-inline: 12px; font-size: 12px; }
+  .warehouse-shell .dataset-control-deck { border-radius: 12px; }
+  .warehouse-shell .dataset-control-deck .dataset-robot-categories { padding: 10px 11px; gap: 5px; }
+  .warehouse-shell .dataset-control-deck .dataset-robot-categories > button { padding: 6px 9px; min-height: 34px; font-size: 11px; }
+  .warehouse-shell .dataset-control-deck .dataset-search-bar > .ant-card-body { padding: 12px; }
+  .warehouse-shell .dataset-search-row { grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+  .warehouse-shell .dataset-search-row > :first-child { grid-column: 1 / -1; }
+  .warehouse-shell .dataset-collection-title { gap: 3px 8px; flex: 1 1 160px; }
+  .warehouse-shell .dataset-collection-title h2 { font-size: 12px; }
+  .warehouse-shell .dataset-collection-title > span { font-size: 11px; }
+  .warehouse-shell .dataset-collection-toolbar { gap: 8px; }
+  .warehouse-shell .dataset-collection-toolbar > .ant-space { gap: 4px !important; }
+  .warehouse-shell .dataset-refresh { width: 28px; padding: 0; }
+  .warehouse-shell .dataset-view-toggle { padding: 2px; border-radius: 8px; }
+  .warehouse-shell .dataset-view-toggle .ant-btn { width: 28px; height: 28px; }
+  .warehouse-shell .data-workspace .dataset-card > .ant-card-body { padding: 15px 15px 12px; }
+  .warehouse-shell .dataset-list-table .ant-table-tbody > tr > td { padding: 13px 12px; }
+  .warehouse-shell .dataset-list-table .ant-table { min-width: 0; }
+  .warehouse-shell .data-workspace .explorer-heading h1 { font-size: 22px; }
+  .warehouse-shell .data-workspace .explorer-heading-actions .ant-btn { padding-inline: 10px; font-size: 12px; }
+  .warehouse-shell .data-workspace .explorer-navigation { top: 77px; padding: 10px; border-radius: 11px; }
+  .warehouse-shell .data-workspace .explorer-navigation-buttons { gap: 6px; }
+  .warehouse-shell .data-workspace .explorer-navigation-buttons .ant-btn { font-size: 11px; padding-inline: 8px; height: 32px; }
+  .warehouse-shell .explorer-history-controls { padding: 2px; }
+  .warehouse-shell .explorer-history-controls .ant-btn { width: auto; padding-inline: 7px !important; }
+  .warehouse-shell .data-workspace .explorer-navigation-buttons > .ant-btn:last-child { margin-left: auto; }
+  .warehouse-shell .data-workspace .explorer-crumb { max-width: 110px; font-size: 11px; padding: 3px 4px; }
+  .warehouse-shell .data-workspace .explorer-current-crumb { max-width: 160px; font-size: 11px; padding: 3px 6px; }
+  .warehouse-shell .data-workspace .explorer-toolbar { padding: 12px; gap: 10px; }
+  .warehouse-shell .data-workspace .explorer-actions { gap: 6px !important; }
+  .warehouse-shell .data-workspace .explorer-actions .ant-btn { font-size: 11px; padding-inline: 9px; height: 32px; }
+  .warehouse-shell .data-workspace .explorer-folders { grid-template-columns: minmax(0, 1fr); gap: 9px; padding: 12px; }
+  .warehouse-shell .data-workspace .explorer-folder-card { border-radius: 10px; }
+  .warehouse-shell .data-workspace .explorer-folder-card > .explorer-folder { padding: 13px 11px; }
+  .warehouse-shell .data-workspace .explorer-folder-download { min-width: 64px; height: 34px; }
+  .warehouse-shell .data-workspace .explorer-file-table { padding-inline: 12px; }
+  .warehouse-shell .data-workspace .explorer-drop { padding: 4px 12px 12px; }
+  .warehouse-shell .workspace-pagination .ant-pagination-total-text { width: 100%; margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .warehouse-shell *, .warehouse-shell *::before, .warehouse-shell *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+  .warehouse-shell .data-workspace .dataset-card:hover, .warehouse-shell .data-workspace .explorer-folder-card:hover { transform: none; }
+}
