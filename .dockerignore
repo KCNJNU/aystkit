@@ -1,0 +1,16 @@
+.git
+runtime-data
+backups
+**/.env
+**/.env.*
+**/*.env
+**/node_modules
+**/.venv
+**/__pycache__
+**/.pytest_cache
+**/.runtime
+**/*.log
+warehouse-platform/apps/api/dist
+warehouse-platform/apps/web/dist
+observer-platform/coverage-config/dist
+deployed-snapshot

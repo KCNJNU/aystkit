@@ -760,7 +760,8 @@ export class ArchiveRecordingsService {
       const child = spawn('tar', ['-C', directory, '-cf', '-', '.'], { stdio: ['ignore', 'pipe', 'pipe'] });
       const compressor = spawn('zstd', ['-T1', ...(compressionLevel === 1 ? ['-1'] : []), '-q', '-o', output], { stdio: ['pipe', 'ignore', 'pipe'] });
       let stderr = '', failure: Error | undefined, closed = 0, pipeDone = false, settled = false;
-      let timer: ReturnType<typeof setTimeout> | undefined, killTimer: ReturnType<typeof setTimeout> | undefined;
+      let timer: ReturnType<typeof setTimeout> | undefined, totalTimer: ReturnType<typeof setTimeout> | undefined,
+        progressTimer: ReturnType<typeof setInterval> | undefined, killTimer: ReturnType<typeof setTimeout> | undefined;
       let outputBytes = 0, checkingOutput = false;
       const done = () => {
         if (settled || closed !== 2 || !pipeDone) return;
@@ -799,11 +800,11 @@ export class ArchiveRecordingsService {
         });
       }
       progress();
-      const totalTimer = setTimeout(() => fail(new ServiceUnavailableException('压缩包生成超过总时限，原始文件已保留，请稍后重试')), PACKAGE_TOTAL_TIMEOUT_MS);
+      totalTimer = setTimeout(() => fail(new ServiceUnavailableException('压缩包生成超过总时限，原始文件已保留，请稍后重试')), PACKAGE_TOTAL_TIMEOUT_MS);
       totalTimer.unref();
       // Input bytes renew the idle budget. During the final compressor flush,
       // output growth also counts; keep metadata polling single-flight.
-      const progressTimer = setInterval(() => {
+      progressTimer = setInterval(() => {
         if (checkingOutput || failure || settled) return;
         checkingOutput = true;
         void stat(output).then(info => {

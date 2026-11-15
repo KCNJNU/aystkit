@@ -1,0 +1,12 @@
+# Optional repeatable source verification, separate from runtime images.
+# Build the standalone migration image first, then pass its exact image name.
+ARG MIGRATION_IMAGE=aystkit-migration:standalone
+FROM ${MIGRATION_IMAGE}
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 tar zstd git \
+    && rm -rf /var/lib/apt/lists/*
+USER node
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENTRYPOINT ["/bin/sh", "-ec"]
+CMD ["npm run build && NODE_ENV=test npm test && npx prisma validate --schema apps/api/prisma/schema.prisma"]

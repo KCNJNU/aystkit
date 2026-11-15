@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-11-15T16:21:52.388434+08:00",
+  "scope": "Standalone installation from repository source; isolated project and new volumes; no production data or hardware operations.",
+  "result": "PASS",
+  "deployment": {
+    "composeConfig": "PASS",
+    "sourceImageBuild": "PASS",
+    "prismaMigrations": 14,
+    "newAdminAndRobotBootstrap": "PASS",
+    "existingAccountPasswordAndPermissionsPreserved": "PASS",
+    "optionalFrontendRebuild": "PASS"
+  },
+  "tests": {
+    "rootBuild": "PASS",
+    "backend": {
+      "suites": 62,
+      "passed": 859,
+      "failed": 0
+    },
+    "web": {
+      "files": 48,
+      "passed": 324,
+      "failed": 0
+    },
+    "scripts": {
+      "passed": 6,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "Windows-only orchestration on Linux"
+    },
+    "prismaValidate": "PASS"
+  },
+  "acceptance": {
+    "observerAndWarehouseLogin": "PASS",
+    "pagesAndAssets": "PASS",
+    "chunkedUpload": "PASS",
+    "workerFinalize": "PASS",
+    "authenticatedDownloadSha256": "PASS",
+    "datasetBrowser": "PASS",
+    "temporaryDatasetAndObjectCleanup": "PASS",
+    "observerCrashRecovered": true,
+    "gatewayCrashRecovered": true,
+    "fullStopStartPreservesAccountAndDataset": true,
+    "objectSha256Preserved": true,
+    "frontendFilesIdentical": 631,
+    "testDataCleaned": true
+  },
+  "deploymentScript": {
+    "privateConfigMode": "0600",
+    "repeatInitDoesNotRotateSecrets": true,
+    "privateConfigOverridesAmbientEnvironment": true,
+    "frontendTargetChoicePersists": true,
+    "currentPasswordsPromptedWithoutEcho": true
+  },
+  "limits": [
+    "Existing cloud accounts, robot histories, datasets, recordings and private credentials are not included in the public source.",
+    "Robot sensors and live feeds require an authorized device connection to the new instance.",
+    "Real AI requests require the recipient’s external API key.",
+    "Windows and macOS full deployment were not tested.",
+    "Initial dependency/image downloads require network access; this is not an offline image bundle."
+  ]
+}

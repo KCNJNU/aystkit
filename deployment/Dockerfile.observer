@@ -1,0 +1,61 @@
+# Build from the repository root. The default deployed-frontend target uses
+# the audited frontend assets shipped with this handoff to reproduce the
+# deployed cloud interface without rebuilding or changing its bundles.
+# Select --target rebuilt-frontend explicitly after editing frontend sources.
+ARG PYTHON_BASE_IMAGE=python:3.12-slim-bookworm
+ARG NODE_BASE_IMAGE=node:24-bookworm-slim
+
+FROM ${NODE_BASE_IMAGE} AS warehouse-frontend-build
+WORKDIR /workspace/warehouse
+COPY warehouse-platform/package.json warehouse-platform/package-lock.json ./
+COPY warehouse-platform/apps/api/package.json apps/api/package.json
+COPY warehouse-platform/apps/web/package.json apps/web/package.json
+RUN npm ci --workspace=@cleaning-robot/web --include-workspace-root
+COPY warehouse-platform/apps/web apps/web
+ENV VITE_APP_BASE_PATH=/dbprog/ \
+    VITE_API_BASE_URL=/dbprog \
+    VITE_HEALTH_API_BASE_URL=/dbprog/nest
+RUN npm run build --workspace=@cleaning-robot/web
+
+FROM ${NODE_BASE_IMAGE} AS coverage-frontend-build
+WORKDIR /workspace/observer/coverage-config
+COPY observer-platform/coverage-config/package.json observer-platform/coverage-config/package-lock.json ./
+RUN npm ci
+COPY observer-platform/coverage-config ./
+# vite.config.ts writes /workspace/observer/cloud/frontend/coverage and uses
+# /coverage-assets/ for all browser asset and worker URLs.
+RUN npm run build
+
+FROM ${PYTHON_BASE_IMAGE} AS observer-base
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+COPY observer-platform/requirements.lock /app/requirements.lock
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends nginx-light \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --no-cache-dir -r requirements.lock \
+    && groupadd --gid 10001 observer \
+    && useradd --uid 10001 --gid observer --no-create-home observer \
+    && mkdir /data && chown observer:observer /data
+COPY observer-platform/cloud /app/cloud
+COPY observer-platform/shared /app/shared
+COPY deployment/nginx.conf /app/nginx.conf
+COPY deployment/observer-entrypoint.py /app/observer-entrypoint.py
+USER observer
+EXPOSE 8080
+HEALTHCHECK --interval=15s --timeout=5s --start-period=15s --retries=5 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/healthz',timeout=3).read()"
+CMD ["python", "/app/observer-entrypoint.py"]
+
+# Optional development target: rebuild both applications from included source.
+# Runtime Python code and the sensor library remain the same as the default.
+FROM observer-base AS rebuilt-frontend
+USER root
+RUN rm -rf /app/cloud/frontend/warehouse /app/cloud/frontend/coverage
+COPY --from=warehouse-frontend-build /workspace/warehouse/apps/web/dist /app/cloud/frontend/warehouse
+COPY --from=coverage-frontend-build /workspace/observer/cloud/frontend/coverage /app/cloud/frontend/coverage
+USER observer
+
+# Keep the audited cloud asset target last so an ordinary docker build has the
+# same result as Compose's explicit target: deployed-frontend.
+FROM observer-base AS deployed-frontend
